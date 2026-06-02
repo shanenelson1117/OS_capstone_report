@@ -199,11 +199,11 @@ INPUT rpc.tex
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/jknappen/ec/ecrm1440.tfm
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/jknappen/ec/ecbx1440.tfm
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/jknappen/ec/ectt1000.tfm
-INPUT ./images/m4_diag.png
-INPUT ./images/m4_diag.png
-INPUT ./images/m4_diag.png
-INPUT ./images/m4_diag.png
-INPUT ./images/m4_diag.png
+INPUT ./images/finalm4.drawio.png
+INPUT ./images/finalm4.drawio.png
+INPUT ./images/finalm4.drawio.png
+INPUT ./images/finalm4.drawio.png
+INPUT ./images/finalm4.drawio.png
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/jknappen/ec/ecbx1200.tfm
 INPUT ./images/naive_purple.png
 INPUT ./images/naive_purple.png

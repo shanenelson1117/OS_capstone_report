@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1780388244.77152 "/Users/shanenelson/Downloads/CSE481A_labreport/main.tex" "main.pdf" "main" 1780388245.75724 0
+["pdflatex"] 1780388910.28809 "/Users/shanenelson/Downloads/CSE481A_labreport/main.tex" "main.pdf" "main" 1780388911.22619 0
   "/Users/shanenelson/Downloads/CSE481A_labreport/main.tex" 1780386690.0294 1078 cc35218276dedc5de78dd03079f3e79c ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -104,15 +104,15 @@
   "/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1780352309 5573038 b99aad5e4898a9034e953632f940512b ""
   "/usr/local/texlive/2026/texmf-var/web2c/pdftex/pdflatex.fmt" 1774209607 3636776 dc5fa9b6b1453b9d196cd42edf876004 ""
   "/usr/local/texlive/2026/texmf.cnf" 1774209515 577 648cd9f92f9c0eac486f4c71c85cfbbe ""
-  "images/m4_diag.png" 1780380428.58797 62380 97cb667fd8b8704e78064a457a54a24e ""
+  "images/finalm4.drawio.png" 1780388881.90052 65594 228bb42d17e66c8d3b5cd7135e9a522f ""
   "images/naive_purple.png" 1780372904.04262 46979 61aa4c84d422b69ff1852ee662b21d04 ""
   "images/perthread_purple.png" 1780372909.69008 46949 f9802af8980f7c34ef7af668500cad93 ""
   "images/waiting.png" 1780372899.82464 20470 0616fe6ab437527213908c5aa07cde22 ""
-  "main.aux" 1780388245.63841 5050 983fb2cdda4bbf9a4aceda03c0a9d26b "pdflatex"
-  "main.out" 1780388245.63958 1651 73e0495376b9fdd55daca5a056c4cf43 "pdflatex"
+  "main.aux" 1780388911.1366 5050 983fb2cdda4bbf9a4aceda03c0a9d26b "pdflatex"
+  "main.out" 1780388911.13781 1651 73e0495376b9fdd55daca5a056c4cf43 "pdflatex"
   "main.tex" 1780386690.0294 1078 cc35218276dedc5de78dd03079f3e79c ""
-  "main.toc" 1780388245.63985 1484 a884089f4a4a3bfc76f1fb6092b1d479 "pdflatex"
-  "rpc.tex" 1780388244.54563 15975 96e657ef161f07ddcfef30d61733af85 ""
+  "main.toc" 1780388911.13812 1484 a884089f4a4a3bfc76f1fb6092b1d479 "pdflatex"
+  "rpc.tex" 1780388910.08384 15982 6151a46ae37d0ae8381cf3d31be287d6 ""
   (generated)
   "main.aux"
   "main.log"
