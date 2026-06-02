@@ -79,7 +79,7 @@ In order to reduce the latency for large messages, we implement a shared memory 
  \begin{enumerate}
     \item Client tries to request an operation that requires a request or response larger than one cacheline and sees that \co{struct aos_rpc.shm_vaddr} is NULL.
     \item Client allocates a physical memory frame.
-    \item Client maps this frame into its virtual memory frame and updates the \newline \co{struct aos_rpc.shm_vaddr} and \co{struct aos_rpc.shm_size} fields.
+    \item Client maps this frame into its virtual memory space and updates the \newline \co{struct aos_rpc.shm_vaddr} and \co{struct aos_rpc.shm_size} fields.
     \item Client sends frame capability to init in a \co{SHMEM_SETUP} message.
     \item Init maps the capability into its virtual address space and updates the corresponding \co{struct client_state} fields for the client.
     \item Init sends back a \co{SHMEM_ACK} message.
