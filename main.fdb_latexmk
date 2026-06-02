@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1780388910.28809 "/Users/shanenelson/Downloads/CSE481A_labreport/main.tex" "main.pdf" "main" 1780388911.22619 0
+["pdflatex"] 1780389306.50479 "/Users/shanenelson/Downloads/CSE481A_labreport/main.tex" "main.pdf" "main" 1780389307.3973 0
   "/Users/shanenelson/Downloads/CSE481A_labreport/main.tex" 1780386690.0294 1078 cc35218276dedc5de78dd03079f3e79c ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -108,11 +108,11 @@
   "images/naive_purple.png" 1780372904.04262 46979 61aa4c84d422b69ff1852ee662b21d04 ""
   "images/perthread_purple.png" 1780372909.69008 46949 f9802af8980f7c34ef7af668500cad93 ""
   "images/waiting.png" 1780372899.82464 20470 0616fe6ab437527213908c5aa07cde22 ""
-  "main.aux" 1780388911.1366 5050 983fb2cdda4bbf9a4aceda03c0a9d26b "pdflatex"
-  "main.out" 1780388911.13781 1651 73e0495376b9fdd55daca5a056c4cf43 "pdflatex"
+  "main.aux" 1780389307.31167 5050 801feb8fcaf20eaba67c6f8e05541866 "pdflatex"
+  "main.out" 1780389307.31286 1651 7dad5b2bad8e3d31c596c30245ac0832 "pdflatex"
   "main.tex" 1780386690.0294 1078 cc35218276dedc5de78dd03079f3e79c ""
-  "main.toc" 1780388911.13812 1484 a884089f4a4a3bfc76f1fb6092b1d479 "pdflatex"
-  "rpc.tex" 1780388910.08384 15982 6151a46ae37d0ae8381cf3d31be287d6 ""
+  "main.toc" 1780389307.31312 1484 55ed3545611ced9db1e5202490e1de63 "pdflatex"
+  "rpc.tex" 1780389306.31465 15961 4b9d65aec3d087e578dd9b7ba73fdeab ""
   (generated)
   "main.aux"
   "main.log"

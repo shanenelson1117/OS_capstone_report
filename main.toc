@@ -9,11 +9,11 @@
 \contentsline {subsubsection}{General Purpose Serving}{3}{subsubsection*.10}%
 \contentsline {subsubsection}{Special Case: {\textcolor {codeblue}{\textbf {\texttt {aos_rpc_proc_wait()}}}}}{4}{subsubsection*.11}%
 \contentsline {subsection}{Shared Memory for Large Messages}{4}{subsection*.12}%
-\contentsline {section}{Development Process}{4}{section*.13}%
-\contentsline {section}{Optimizations and Performance Evaluation}{5}{section*.14}%
-\contentsline {subsection}{Performance Goals and Optimizations}{5}{subsection*.15}%
-\contentsline {subsubsection}{1. Latency Reduction for Multithreaded LMP}{5}{subsubsection*.16}%
-\contentsline {subsubsection}{2. Memory Usage Reduction of Large Message Infrastructure}{5}{subsubsection*.17}%
-\contentsline {subsection}{Performance Evaluation}{5}{subsection*.18}%
-\contentsline {subsubsection}{Microbenchmarks}{5}{subsubsection*.19}%
-\contentsline {subsubsection}{Results}{6}{subsubsection*.20}%
+\contentsline {section}{Optimizations and Performance Evaluation}{4}{section*.13}%
+\contentsline {subsection}{Performance Goals and Optimizations}{4}{subsection*.14}%
+\contentsline {subsubsection}{1. Latency Reduction for Multithreaded LMP}{4}{subsubsection*.15}%
+\contentsline {subsubsection}{2. Memory Usage Reduction of Large Message Infrastructure}{4}{subsubsection*.16}%
+\contentsline {subsection}{Performance Evaluation}{5}{subsection*.17}%
+\contentsline {subsubsection}{Microbenchmarks}{5}{subsubsection*.18}%
+\contentsline {subsubsection}{Results}{5}{subsubsection*.19}%
+\contentsline {section}{Development Process}{7}{section*.20}%

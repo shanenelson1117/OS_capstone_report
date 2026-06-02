@@ -86,29 +86,10 @@ In order to reduce the latency for large messages, we implement a shared memory 
     \item Client proceeds to whichever operation was in progress.
  \end{enumerate}
 
-\section{Development Process}
-What I will call phase 1 began with Sahil writing the client side state and handlers in  \newline \co{aos_rpc.c}/\co{aos_rpc.h} as well as the original
-initialization code in \co{barrelfish_initonthread()}. Allan then wrote the serverside entry point as well as
-wrappers for all of the per-request handlers and the implementations of the memory and serial services. Shane then
-finished the naive implementation by finishing the initialization, server, and client functionality, and implementing 
-naive mutex-based synchronization and shared memory for large messages. At this point we were passing all of the \co{m4_grading} tests.
- \newline
- \newline
-Phase 2 began after a conversation on Ed with Simon which motivated Shane to implement the optimizations below. This
-involved reworking and hardening the implementation in phase 1, as well as changing the protocol to handle
- per-thread LMP channels. This required touching every LMP-related file as well as the threading library and was difficult to
- get running, requiring debugging with Simon in office hours. Using AI tooling
- tests were written for the optimization, which it passed.
- \newline
- \newline
- The final phase began when collecting data for this report, where Shane (with the help of AI tooling) reverted
- to an unoptimized version of the code. Shane then implemented 3 benchmarks, collected results, and wrote the M4 section
- of the report.
-
 \section{Optimizations and Performance Evaluation}
 \subsection{Performance Goals and Optimizations}
 Our performance goals for our optimizations of milestone 4 were (1) reduce the latency of multithreaded RPC, 
-and (2) reduce the memory usage of our shared-memory approach to large LMP messages.
+and (2) reduce the memory usage of our shared-memory approach.
 \subsubsection{1. Latency Reduction for Multithreaded LMP}
 We anticipate multithreaded workloads that make heavy usage of the local RPC infrastructure to perform
 very poorly using a naive mutual-exclusion locking based approach to synchronization. For this reason we
@@ -163,7 +144,7 @@ Of importance is also the behavior of the tails where the unoptimized build had 
 higher than the maximum optimized latency. This explains the mean-median discrepancy. We find this to be the strongest result
 for our implementation as multithreaded IPC-heavy workloads are readily imaginable.
  \newline
- \newline
+  \newline
  Finally, the results for our multithreaded waiter benchmark (Figure~\ref{fig:bench-mtw}) reflect our initial expectations exactly. Our optimized build saw only
 a 26\% increase in latency with a blocked waiter, while the naive build saw a > 1000\% gain in latency, bounded by the time-to-exit of the waitee process.
 This result reflects our initial motivation for building this optimization. It may seem heavily cherry-picked, but you could 
@@ -195,4 +176,23 @@ imagine an application such as a shell having such behavior.
     worse while a thread is waiting, whereas per-thread channels see only a modest 26\% cycle gain.}
     \label{fig:bench-mtw}
 \end{figure}
+
+\section{Development Process}
+What I will call phase 1 began with Sahil writing the client side state and handlers in  \newline \co{aos_rpc.c}/\co{aos_rpc.h} as well as the original
+initialization code in \co{barrelfish_initonthread()}. Allan then wrote the serverside entry point as well as
+wrappers for all of the per-request handlers and the implementations of the memory and serial services. Shane then
+finished the naive implementation by finishing the initialization, server, and client functionality, and implementing 
+naive mutex-based synchronization and shared memory for large messages. At this point we were passing all of the \co{m4_grading} tests.
+ \newline
+ \newline
+Phase 2 began after a conversation on Ed with Simon which motivated Shane to implement the optimizations above. This
+involved reworking and hardening the implementation in phase 1, as well as changing the protocol to handle
+ per-thread LMP channels. This required touching every LMP-related file as well as the threading library and was difficult to
+ get running, requiring debugging with Simon in office hours. Using AI tooling
+ tests were written for the optimization, which it passed.
+ \newline
+ \newline
+ The final phase began when collecting data for this report, where Shane (with the help of AI tooling) reverted
+ to an unoptimized version of the code. Shane then implemented 3 benchmarks, collected results, and wrote the M4 section
+ of the report.
 \newpage
