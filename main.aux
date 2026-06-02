@@ -1,0 +1,35 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\@writefile{toc}{\contentsline {chapter}{M4: Core-Local Message Passing}{2}{chapter*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Architecture Overview}{2}{section*.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Overall LMP subsystem architecture.}}{2}{figure.0.1}\protected@file@percent }
+\newlabel{fig:m4arch}{{1}{2}{Overall LMP subsystem architecture}{figure.0.1}{}}
+\@writefile{toc}{\contentsline {subsection}{Client-Side}{2}{subsection*.4}\protected@file@percent }
+\newlabel{sec:clientside}{{}{2}{Client-Side}{subsection*.4}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Thread-Local State}{3}{subsubsection*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Channel Initialization}{3}{subsubsection*.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Synchronous Send/Receive}{3}{subsubsection*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Server-Side}{3}{subsection*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Handshake Protocol}{3}{subsubsection*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{General Purpose Serving}{3}{subsubsection*.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Special Case: {\textcolor {codeblue}{\textbf  {\texttt  {aos_rpc_proc_wait()}}}}}{4}{subsubsection*.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Shared Memory for Large Messages}{4}{subsection*.12}\protected@file@percent }
+\newlabel{sec:shared_mem}{{}{4}{Shared Memory for Large Messages}{subsection*.12}{}}
+\@writefile{toc}{\contentsline {section}{Development Process}{4}{section*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Optimizations and Performance Evaluation}{5}{section*.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Performance Goals and Optimizations}{5}{subsection*.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{1. Latency Reduction for Multithreaded LMP}{5}{subsubsection*.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{2. Memory Usage Reduction of Large Message Infrastructure}{5}{subsubsection*.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Performance Evaluation}{5}{subsection*.18}\protected@file@percent }
+\newlabel{sec:performance-opt}{{}{5}{Performance Evaluation}{subsection*.18}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Microbenchmarks}{5}{subsubsection*.19}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Results}{6}{subsubsection*.20}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Naive implementation benchmark results for a single-threaded number passing benchmark, labeled RTT, and a multithreaded string passing benchmark, labeled stress.}}{6}{figure.0.2}\protected@file@percent }
+\newlabel{fig:bench-naive}{{2}{6}{Naive implementation benchmark results for a single-threaded number passing benchmark, labeled RTT, and a multithreaded string passing benchmark, labeled stress}{figure.0.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Per-thread implementation benchmark results for a single-threaded number passing benchmark, labeled RTT, and a multithreaded string passing benchmark, labeled stress. As can be seen the overhead to create a perthread channel (evident in the median RTT statistic) is negligible compared to the baseline. The per-thread implementation sees significant gains in median multithreaded latency.}}{7}{figure.0.3}\protected@file@percent }
+\newlabel{fig:bench-perthread}{{3}{7}{Per-thread implementation benchmark results for a single-threaded number passing benchmark, labeled RTT, and a multithreaded string passing benchmark, labeled stress. As can be seen the overhead to create a perthread channel (evident in the median RTT statistic) is negligible compared to the baseline. The per-thread implementation sees significant gains in median multithreaded latency}{figure.0.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Performance drop-off from running a multithreaded workload (MTW) without a thread waiting on a process to finish, to running one with a thread waiting. Per process lmp channels perform > 1000\% worse while a thread is waiting, whereas per-thread channels see only a modest 26\% cycle gain.}}{7}{figure.0.4}\protected@file@percent }
+\newlabel{fig:bench-mtw}{{4}{7}{Performance drop-off from running a multithreaded workload (MTW) without a thread waiting on a process to finish, to running one with a thread waiting. Per process lmp channels perform > 1000\% worse while a thread is waiting, whereas per-thread channels see only a modest 26\% cycle gain}{figure.0.4}{}}
+\gdef \@abspage@last{8}

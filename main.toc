@@ -1,0 +1,19 @@
+\contentsline {chapter}{M4: Core-Local Message Passing}{2}{chapter*.2}%
+\contentsline {section}{Architecture Overview}{2}{section*.3}%
+\contentsline {subsection}{Client-Side}{2}{subsection*.4}%
+\contentsline {subsubsection}{Thread-Local State}{3}{subsubsection*.5}%
+\contentsline {subsubsection}{Channel Initialization}{3}{subsubsection*.6}%
+\contentsline {subsubsection}{Synchronous Send/Receive}{3}{subsubsection*.7}%
+\contentsline {subsection}{Server-Side}{3}{subsection*.8}%
+\contentsline {subsubsection}{Handshake Protocol}{3}{subsubsection*.9}%
+\contentsline {subsubsection}{General Purpose Serving}{3}{subsubsection*.10}%
+\contentsline {subsubsection}{Special Case: {\textcolor {codeblue}{\textbf {\texttt {aos_rpc_proc_wait()}}}}}{4}{subsubsection*.11}%
+\contentsline {subsection}{Shared Memory for Large Messages}{4}{subsection*.12}%
+\contentsline {section}{Development Process}{4}{section*.13}%
+\contentsline {section}{Optimizations and Performance Evaluation}{5}{section*.14}%
+\contentsline {subsection}{Performance Goals and Optimizations}{5}{subsection*.15}%
+\contentsline {subsubsection}{1. Latency Reduction for Multithreaded LMP}{5}{subsubsection*.16}%
+\contentsline {subsubsection}{2. Memory Usage Reduction of Large Message Infrastructure}{5}{subsubsection*.17}%
+\contentsline {subsection}{Performance Evaluation}{5}{subsection*.18}%
+\contentsline {subsubsection}{Microbenchmarks}{5}{subsubsection*.19}%
+\contentsline {subsubsection}{Results}{6}{subsubsection*.20}%

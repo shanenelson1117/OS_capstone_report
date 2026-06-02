@@ -1,0 +1,48 @@
+\documentclass[10pt,a4paper,titlepage]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage[margin=1.2in]{geometry}
+\usepackage{titlesec}
+\usepackage{float}
+\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue]{hyperref}
+\setcounter{secnumdepth}{0}
+
+% use \co{} for inline code typefacing
+\usepackage{xcolor}
+\definecolor{codeblue}{RGB}{80,80,140}
+\definecolor{codebg}{RGB}{245,245,245}
+\newcommand{\co}[1]{%
+  {\textcolor{codeblue}{\textbf{\texttt{\detokenize{#1}}}}}%
+}
+\titlespacing*{\chapter}{-90pt}{-70pt}{-20pt}
+
+% TODO: Replace the title with your own
+\title{Group 5 Barrelfish Final Report}
+\author{Chenyi Yang, Shane Nelson, Sahil Gupta}
+
+\begin{document}
+	
+	\maketitle
+
+	\tableofcontents
+	\newpage
+	
+	%\input{memory-allocation.tex}
+	%\newpage
+	%\input{self-paging.tex}
+	%\newpage
+	%\input{processes.tex}
+	\input{rpc.tex}
+	\newpage
+	%\input{multicore.tex}
+	%\newpage
+	%\input{urpc.tex}
+	%\newpage
+	%\input{shell.tex}	
+	
+\end{document}
