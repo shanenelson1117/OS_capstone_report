@@ -1,4 +1,4 @@
-\contentsline {chapter}{M4: Core-Local Message Passing}{2}{chapter*.2}%
+\contentsline {chapter}{M4: Core-Local Message Passing (LMP)}{2}{chapter*.2}%
 \contentsline {section}{Architecture Overview}{2}{section*.3}%
 \contentsline {subsection}{Client-Side}{2}{subsection*.4}%
 \contentsline {subsubsection}{Thread-Local State}{3}{subsubsection*.5}%
@@ -17,3 +17,15 @@
 \contentsline {subsubsection}{Microbenchmarks}{5}{subsubsection*.18}%
 \contentsline {subsubsection}{Results}{5}{subsubsection*.19}%
 \contentsline {section}{Development Process}{7}{section*.20}%
+\contentsline {chapter}{M6: User-Level Message Passing (UMP)}{8}{chapter*.21}%
+\contentsline {section}{Architecture Overview}{8}{section*.22}%
+\contentsline {subsection}{Requestor}{8}{subsection*.23}%
+\contentsline {subsection}{Receiver}{8}{subsection*.24}%
+\contentsline {section}{Extension For Shell}{8}{section*.25}%
+\contentsline {subsection}{API Extension}{8}{subsection*.26}%
+\contentsline {subsection}{Optimized (Implemented) Design}{8}{subsection*.27}%
+\contentsline {subsection}{Alternative (Naive) Design}{8}{subsection*.28}%
+\contentsline {section}{Performance Evaluation}{8}{section*.29}%
+\contentsline {subsection}{Microbenchmarks}{8}{subsection*.30}%
+\contentsline {subsection}{Results}{8}{subsection*.31}%
+\contentsline {section}{Development Process}{8}{section*.32}%

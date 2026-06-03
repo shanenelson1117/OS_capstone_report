@@ -220,6 +220,9 @@ INPUT ./images/waiting.png
 INPUT ./images/waiting.png
 INPUT ./images/waiting.png
 INPUT ./images/waiting.png
+INPUT ./urpc.tex
+INPUT ./urpc.tex
+INPUT urpc.tex
 INPUT main.aux
 INPUT ./main.out
 INPUT ./main.out

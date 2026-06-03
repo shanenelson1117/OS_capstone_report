@@ -1,6 +1,6 @@
 
 \chapter*{M4: Core-Local Message Passing}{Section author: Shane Nelson}
-\addcontentsline{toc}{chapter}{M4: Core-Local Message Passing}
+\addcontentsline{toc}{chapter}{M4: Core-Local Message Passing (LMP)}
 
 \section{Architecture Overview}
 Our M4 architecture is split cleanly between our client side request API contained in \newline \co{include/aos/aos_rpc.h} and our
@@ -114,7 +114,7 @@ to judge the performance of the optimization we did implement.
 To facilitate comparing a non-optimized LMP implementation to our optimized implementation, we created 
 three microbenchmarks:
 \begin{description}
-    \item \textbf{1. RTT: Round Trip Trial.}
+    \item \textbf{1. RTT: Round Trip Time.}
     
     This benchmark is designed to test the round trip cycle latency for a simple \newline \co{aos_rpc_send_number()} operation. It is single threaded and is initially run 20 times to warm up microarchitectural structures, then 200 times each collecting a cycle latency measurement.
 
