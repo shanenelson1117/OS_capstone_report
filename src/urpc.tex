@@ -160,7 +160,7 @@ of being simple to implement and also implicitly ensuring that send and receive 
  \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{experiments/m6_contention/penbding_replies_size.png}
-    \caption{Performance scales linearly with the number of slots in \co{pending_replies}, until there are enough
+    \caption{Results show linear speedup in the number of slots in \co{pending_replies}, until there are enough
     slots for each thread at which point there are no additional returns.}
     \label{fig:16threads}
 \end{figure}
@@ -170,7 +170,7 @@ Once there is a slot for every thread the benchmark spawns [corollary: outstandi
  \newline
   \newline
 This leads to an important performance invariant, in order to have optimal concurrent performance, the UMP
-service must be able to have a \co{pending_replies} and \co{pending_recv} (see below) slot for every concurrent UMP operation. Because LMP is synchronous,
+service must be able to have a \co{pending_replies} and \co{pending_recv} slot for every concurrent UMP operation. Because LMP is synchronous,
 this means that there need only be a \co{pending_replies} slot for each thread for maximum performace under high contention. We do not implement this
 because depending on implementation it would impose necessary communication between init domains on how many threads there are or best case requires increased complexity in tracking operations.
 We hypothesize this maximal approach is not necessary because most workloads do not have every thread simultaneously communicating cross-core. We 
