@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1780557007.06731 "/Users/shanenelson/Classes/481a/CSE481A_labreport/main.tex" "main.pdf" "main" 1780557007.7785 0
+["pdflatex"] 1780558503.25358 "/Users/shanenelson/Classes/481a/CSE481A_labreport/main.tex" "main.pdf" "main" 1780558504.26407 0
   "/Users/shanenelson/Classes/481a/CSE481A_labreport/main.tex" 1780556379.52594 1077 3e815b2d70471c519b21130b763a9eb3 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -108,16 +108,16 @@
   "/usr/local/texlive/2026/texmf.cnf" 1774209515 577 648cd9f92f9c0eac486f4c71c85cfbbe ""
   "experiments/m6_contention/penbding_replies_size.png" 1780531197.0095 28047 e400d074e6d6fabcc87db17ec2981e7f ""
   "images/finalm4.drawio.png" 1780388881.90052 65594 228bb42d17e66c8d3b5cd7135e9a522f ""
-  "images/m6_top_view.png" 1780555869.80047 37814 c8f33a039830ece199dd19bf7244abb4 ""
+  "images/m6.png" 1780558426.75197 38405 427f8417f7b99ca9be519167e125f23e ""
   "images/naive_purple.png" 1780372904.04262 46979 61aa4c84d422b69ff1852ee662b21d04 ""
   "images/perthread_purple.png" 1780372909.69008 46949 f9802af8980f7c34ef7af668500cad93 ""
   "images/waiting.png" 1780372899.82464 20470 0616fe6ab437527213908c5aa07cde22 ""
-  "main.aux" 1780557007.71314 7545 e6be1cadce52bd15ecb4cd3adc06cd14 "pdflatex"
-  "main.out" 1780557007.7141 3688 b4d0e272242efb4a232ed37d689526da "pdflatex"
+  "main.aux" 1780558504.16903 7537 f280a6beb81954c1b0337e1a67a98181 "pdflatex"
+  "main.out" 1780558504.17042 3688 b4d0e272242efb4a232ed37d689526da "pdflatex"
   "main.tex" 1780556379.52594 1077 3e815b2d70471c519b21130b763a9eb3 ""
-  "main.toc" 1780557007.71428 2394 fa4e096b7630b33c6231b233975a397c "pdflatex"
+  "main.toc" 1780558504.17071 2394 fa4e096b7630b33c6231b233975a397c "pdflatex"
   "rpc.tex" 1780545883.99452 16145 80018e12c49fe50143fbf7616c3c6c02 ""
-  "urpc.tex" 1780557006.87311 12765 8a1401ec0dbf60e57d4ac421f84feab6 ""
+  "urpc.tex" 1780558502.01264 12735 14c5b7960590b392f0a278d86fccf5cb ""
   (generated)
   "main.aux"
   "main.log"

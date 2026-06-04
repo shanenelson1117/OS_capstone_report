@@ -4,20 +4,20 @@
  The goal of this milestone is to enable inter-core communication between processes.
 \addcontentsline{toc}{chapter}{M6: User-Level Message Passing (UMP)}
 \section{Architecture Overview}
-Our UMP subsystem connects the init processes of each core via a shared-memory
+The UMP subsystem connects the init processes of each core via a shared-memory
 frame treated as two circular ring buffers. Processes always communicate with
 their local init using LMP. When a process issues an \co{aos_rpc} call that targets a service on a remote
 core, local init intercepts the LMP message and forwards it over UMP to the
 appropriate remote init, hence all messages require an init interception. This is intended as a simplification, but also is logical because all services in the 
 API are served by init. We extend this original API to enable arbitrary process-to-process piping
 as required by a shell. The Archicture Overview section only discusses the infrastructure needed to implement the original API, see \hyperref[sec:shell_extension]{Extension for Shell} for discussion on the
- extension. Figure~\ref{fig:m6over} below shows a diagram illustrating the base UMP subsystem.
+ extension. Figure~\ref{fig:m6over} below illustrates the base UMP subsystem.
 
 
  \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{images/m6_top_view.png}
-    \caption{High-level overview of the RPC system.}
+    \includegraphics[width=1\textwidth]{images/m6.png}
+    \caption{Abstracted view of the RPC system.}
     \label{fig:m6over}
 \end{figure}
 
