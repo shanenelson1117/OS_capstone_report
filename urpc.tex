@@ -1,35 +1,190 @@
-\chapter*{M6: User-Level Message Passing}{Section author: Shane Nelson}
+\chapter*{M6: User-Level Message Passing}{\textbf{Author: Shane Nelson}}
+\newline
+  \newline
+ The goal of this milestone is to enable inter-core communication between processes.
 \addcontentsline{toc}{chapter}{M6: User-Level Message Passing (UMP)}
 \section{Architecture Overview}
+Our UMP subsystem connects the init processes of each core via a shared-memory
+frame treated as two circular ring buffers. Processes always communicate with
+their local init using LMP. When a process issues an \co{aos_rpc} call that targets a service on a remote
+core, local init intercepts the LMP message and forwards it over UMP to the
+appropriate remote init, hence all messages require an init interception. This is intended as a simplification, but also is logical because all services in the 
+API are served by init. We extend this original API to enable arbitrary process-to-process piping
+as required by a shell. The Archicture Overview section only discusses the infrastructure needed to implement the original API, see \hyperref[sec:shell_extension]{Extension for Shell} for discussion on the
+ extension. Figure~\ref{fig:m6over} below shows a diagram illustrating the base UMP subsystem.
+
+
+ \begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/m6_top_view.png}
+    \caption{High-level overview of the RPC system.}
+    \label{fig:m6over}
+\end{figure}
+
+\subsection{Initializing UMP Channels}
+Before booting any APP cores, BSP allocates a frame for each pairwise core-to-core UMP channel
+and stores the physical address of each frame. When booting an APP core, BSP inserts the address of each of the APP 
+cores UMP frames in the \co{initial_urpc} struct along with information about which cores are online.
+Inside the APP cores initialization process, it maps each of these frames into its virtual address space
+and initializes the channels for each core that is currently running. BSP then sends a \co{AOS_RPC_MSG_CORE_UP}
+over UMP to each APP core that was previously running, telling it that a new core is online. These APP 
+cores initialize their end of the UMP channel with the new core. As part of the initialization process, 
+each side's init sets a deffered timer, which periodically allows it to check for messages. At this point both sides have initialized the channel
+and it is ready for use. 
+
+\subsection{Memory Layout of UMP Channel}
+A UMP channel is a shared-memory frame divided into two circular ring buffers.
+Each side of the connection writes into one buffer and reads from the other.
+Each buffer is a sequence of cache-line-sized \textit{slots} with domains communicating
+by writing and reading slots.
+ \newline
+ \newline
+\noindent
+Because the ring buffer slots are a finite shared resource, a send may fail if
+the buffer is full requiring the sender to block. To decouple \textit{logical}
+sends from \textit{physical} availability of ring slots, each channel maintains a
+software send queue (linked list) of messages waiting to be sent.
+When a physical send would block, the message is instead appended to
+this queue. A periodic timer drains the queue by calling \co{drain_send_queue},
+which flushes enqueued entries into the ring as slots become free. From the
+caller's perspective, a send always succeeds immediately. The actual placement
+into shared memory is deferred transparently, allowing the sender to proceed handling
+more LMP requests. \newline
+\newline
+\noindent
+For most RPC operations, all data fits in a single slot. However, some requests
+and replies exceed one cache line and must be split across multiple slots. These
+\textit{multi-slot }messages consist of a \textit{header slot} followed by one or
+more \textit{continuation slots}. The header encodes the message tag, the total
+number of words in the message, and the first five data words. Continuation slots
+carry the remaining data words.\newline
+ \newline
+\noindent
+To reassemble multi-slot messages before dispatching them, we introduce two
+auxiliary tables. \co{pending_recv} is used by the receiver to buffer and
+assemble incoming multi-slot requests until all continuation slots have arrived.
+\co{pending_replies} is the symmetric table used by the requestor to buffer
+incoming multi-slot replies. These tables are statically sized and allocated. In one byte the message tag encodes the RPC operation and
+the slot's role in the protocol: request header, reply header, request
+continuation, or reply continuation. Importantly, the message tag also encodes
+the index into the tables (which are symmetrically indexed) as a means of uniquely identifying which transaction a
+particular message belongs to (still in the same byte). This ensures that messages are assembled and dispatched
+atomically even in the presence of non-atomic sends (messages for different operations may interleave).
+When a message is fully constructed, it is "dispatched", the actual behavior of the dispatch depends
+on if the domain is the original requestor (i.e. write end) or the receiver (i.e. read end) for the message.
+
+\subsection{Handling Incoming Messages}
+When the timer set on init fires, execution is started in the timer handler function. The timer handler function, \co{ump_poll_handler()}, loops through all UMP channels and processes any messages which may have
+ been received. Based on the message type, the handler does the following:
+ \begin{description}
+    \item \textbf{Request Header:}
+    \begin{enumerate}
+        \item If the entire message fits in the header, immediately dispatch into the correct header based on
+        the request type.
+        \item If the entire message does not fit in the header, allocate a slot in the \co{pending_recv} table storing the size of the message, how many bytes weve received so far 
+        and the type of the request.
+    \end{enumerate}
+    \item \textbf{Request Continuation:}
+    \begin{enumerate}
+        \item If the message is now complete, free the \co{pending_recv} entry and dispatch.
+        \item Otherwise update how many bytes we still need to receive.
+    \end{enumerate}
+    \item \textbf{Reply Header:}
+    \begin{enumerate}
+        \item If the entire message fits in the header, immediately respond to the LMP client. Deallocate the
+        previously allocated \co{pending_replies} entry. (See \hyperref[sec:requestor]{Requestor} for discussion on how this was allocated).
+        \item If the entire message does not fit in the header, update the  \co{pending_replies} entry 
+    \end{enumerate}
+     \item \textbf{Reply Continuation:}
+    \begin{enumerate}
+        \item If the reply is now complete, respond to the LMP client. Deallocate the
+        previously allocated \co{pending_replies} entry. 
+        \item Otherwise update how many bytes we still need to receive.
+    \end{enumerate}
+
+ \end{description}
 
 \subsection{Requestor}
+\label{sec:requestor}
+The requestor in the UMP protocol is the init domain which initiates an RPC call on behalf of a process on 
+its core. An init may act as both Requestor and Receiver for different messages concurrently, but each message
+has one requestor and receiver. \newline \newline
+\noindent When init receives an LMP request, it determines the target core. For \co{aos_rpc_proc_spawn_with_cmdline()}, the 
+target core is specified as an argument. For other process management functions, the process ID of the 
+target process is supplied as an argument. We encode the target core in the PID. If a request targets a remote 
+core init does as follows:
+\begin{enumerate}
+    \item Ensure that the target core is running, if not return an error.
+    \item Allocate an entry in \co{pending_replies} to buffer any replies the remote core may send.
+    \item If there are no entries available in the buffer, send a transient error to the client. The client will
+    then prompt the kernel to execute a context switch. When the client is rescheduled it retries the operation. All of this
+    occurs transparently so the programmer must not explicitly handle such errors.
+    \item Parse LMP arguments into required header and cont messages.
+    \item Enqueue messages into the send queue and attempt to drain the queue, sending the messages on the UMP channel to the remote core.
+    \item Handle other business while the LMP client maintains blocked waiting for a reply.
+\end{enumerate}
+When the timer fires, \co{ump_poll_handler} checks for replies. If the reply is ready the requestor translates
+the UMP reply into an LMP reply. The client LMP channel is stored in the \co{pending_replies} entry, thus init
+knows where to send the LMP reply.
+
+\subsubsection{Facilitating Global Operations}
+There are certain operations such as kill all and ps which require init to communicate with the init on every
+core rather than only one core's init. For such operations we find a \co{pending_replies} entry for each core
+that is online, making note that the entry is for a global operation. We then send UMP requests to each UMP channel in the exact same method as above.
+In order to track the incoming replies we introduce another static datastructure \co{ump_fanout}. This struct 
+holds information used to compile the final result as well as information about which cores still need to respond.
+Once all responses have been gathered we compile the results and reply to the client via the lmp channel stored in
+ \co{ump_fanout}. There is only one \co{struct ump_fanout} for each init image so each core can only have one outstanding
+ global operation at any point.
 
 \subsection{Receiver}
+\label{sec:receiver}
+The receiver is much simpler than the requestor. Once the entire request is compiled via \co{ump_poll_handler}
+the correct handler is called for the required rpc operation. We pass the handler a newly created \co{client_state} struct
+which encodes that this is a UMP request. Once in the handler we execute the rpc command locally. We then assemble the 
+UMP reply into a header and any necessary continuation messages and attempt to send them over the UMP channel.
+
+
+\subsection{Concurrent UMP Operations}
+The \co{pending_replies} buffer mentioned above allows our system to handle multiple
+concurrent UMP transactions. A naive implementation may elect not to have such a buffer and 
+instead only allow one outstanding UMP transaction at any point in time. This has the benefit
+of being simple to implement and also implicitly ensuring that send and receive pairs are atomic
+ (a sender can be ensured that the response it receives will be its response). To test the performance
+ benefits of allowing concurrent UMP transactions, we wrote a small microbenchmark. This benchmark
+ spawns 16 threads, each performing one cross-core rpc operation, and records the total time
+ for all threads to complete (this runs 50 times to get a large enough sample). We simulate the 
+ naive approach with a one-entry \co{pending_replies}. Figure~\ref{fig:16threads} below shows the results of this benchmark.
+
+ \begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{experiments/m6_contention/penbding_replies_size.png}
+    \caption{Performance scales linearly with the number of slots in \co{pending_replies}, until there are enough
+    slots for each thread at which point there are no additional returns.}
+    \label{fig:16threads}
+\end{figure}
+
+\noindent The results are exactly as expected, performance scales linearly for each additional \co{pending_replies} slot added. 
+Once there is a slot for every thread the benchmark spawns [corollary: outstanding UMP request] there are no more performance gains. 
+ \newline
+  \newline
+This leads to an important performance invariant, in order to have optimal concurrent performance, the UMP
+service must be able to have a \co{pending_replies} and \co{pending_recv} (see below) slot for every concurrent UMP operation. Because LMP is synchronous,
+this means that there need only be a \co{pending_replies} slot for each thread for maximum performace under high contention. We do not implement this
+because depending on implementation it would impose necessary communication between init domains on how many threads there are or best case requires increased complexity in tracking operations.
+We hypothesize this maximal approach is not necessary because most workloads do not have every thread simultaneously communicating cross-core. We 
+we choose an approach (64 slots) which allows for enough concurrency without complicating the 
+protocol and design. Future work may elect to implement a dynamic allocation scheme or otherwise allow
+the threading library (and perhaps user) to scale the available concurrency in the system.
 
 \section{Extension For Shell}
+\label{sec:shell_extension}
 
 \subsection{API Extension}
 
-\subsection{Optimized (Implemented) Design}
+\subsection{Arbitrary Channels}
 \label{sec:m6_optimized}
 
-
-\subsection{Alternative (Naive) Design}
-\label{sec:m6_naive}
-
-\section{Performance Evaluation}
-\label{sec:m6_performance-opt}
-
-\subsection{Microbenchmarks}
-
-To facilitate comparing an \hyperref[sec:m6_optimized]{optimized} point-to-point UMP implementation to the \hyperref[sec:m6_naive]{naive version} explained
-above, we wrote a Round Trip Time benchmark:
-\begin{description}
-    \item \textbf{RTT: Round Trip Time.}
-    
-\end{description}
-
-\subsection{Results}
 
 \section{Development Process}
 

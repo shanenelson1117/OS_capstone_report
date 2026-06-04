@@ -19,13 +19,14 @@
 \contentsline {section}{Development Process}{7}{section*.20}%
 \contentsline {chapter}{M6: User-Level Message Passing (UMP)}{8}{chapter*.21}%
 \contentsline {section}{Architecture Overview}{8}{section*.22}%
-\contentsline {subsection}{Requestor}{8}{subsection*.23}%
-\contentsline {subsection}{Receiver}{8}{subsection*.24}%
-\contentsline {section}{Extension For Shell}{8}{section*.25}%
-\contentsline {subsection}{API Extension}{8}{subsection*.26}%
-\contentsline {subsection}{Optimized (Implemented) Design}{8}{subsection*.27}%
-\contentsline {subsection}{Alternative (Naive) Design}{8}{subsection*.28}%
-\contentsline {section}{Performance Evaluation}{8}{section*.29}%
-\contentsline {subsection}{Microbenchmarks}{8}{subsection*.30}%
-\contentsline {subsection}{Results}{8}{subsection*.31}%
-\contentsline {section}{Development Process}{8}{section*.32}%
+\contentsline {subsection}{Initializing UMP Channels}{8}{subsection*.23}%
+\contentsline {subsection}{Memory Layout of UMP Channel}{9}{subsection*.24}%
+\contentsline {subsection}{Handling Incoming Messages}{9}{subsection*.25}%
+\contentsline {subsection}{Requestor}{10}{subsection*.26}%
+\contentsline {subsubsection}{Facilitating Global Operations}{10}{subsubsection*.27}%
+\contentsline {subsection}{Receiver}{10}{subsection*.28}%
+\contentsline {subsection}{Concurrent UMP Operations}{11}{subsection*.29}%
+\contentsline {section}{Extension For Shell}{12}{section*.30}%
+\contentsline {subsection}{API Extension}{12}{subsection*.31}%
+\contentsline {subsection}{Arbitrary Channels}{12}{subsection*.32}%
+\contentsline {section}{Development Process}{12}{section*.33}%
