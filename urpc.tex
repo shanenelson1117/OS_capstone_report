@@ -24,26 +24,27 @@ as required by a shell. The Archicture Overview section only discusses the infra
 \subsection{Initializing UMP Channels}
 Before booting any APP cores, BSP allocates a frame for each pairwise core-to-core UMP channel
 and stores the physical address of each frame. When booting an APP core, BSP inserts the address of each of the APP 
-cores UMP frames in the \co{initial_urpc} struct along with information about which cores are online.
-Inside the APP cores initialization process, it maps each of these frames into its virtual address space
+core's UMP frames (one for every peer core) in the \co{initial_urpc} struct along with information about which cores are online.
+Inside the APP core's initialization process, it maps each of these frames into its virtual address space
 and initializes the channels for each core that is currently running. BSP then sends a \co{AOS_RPC_MSG_CORE_UP}
 over UMP to each APP core that was previously running, telling it that a new core is online. These APP 
 cores initialize their end of the UMP channel with the new core. As part of the initialization process, 
-each side's init sets a deffered timer, which periodically allows it to check for messages. At this point both sides have initialized the channel
+each side's init sets a deffered timer, which periodically allows it to check for received UMP messages. At this point both sides have initialized the channel
 and it is ready for use. 
 
 \subsection{Memory Layout of UMP Channel}
 A UMP channel is a shared-memory frame divided into two circular ring buffers.
 Each side of the connection writes into one buffer and reads from the other.
 Each buffer is a sequence of cache-line-sized \textit{slots} with domains communicating
-by writing and reading slots.
+by writing and reading slots. We rely on the MOESI cache coherence policy to synchronize
+writes and reads to these slots.
  \newline
  \newline
 \noindent
 Because the ring buffer slots are a finite shared resource, a send may fail if
 the buffer is full requiring the sender to block. To decouple \textit{logical}
 sends from \textit{physical} availability of ring slots, each channel maintains a
-software send queue (linked list) of messages waiting to be sent.
+dynamically-allocated send queue (linked list) of messages waiting to be sent.
 When a physical send would block, the message is instead appended to
 this queue. A periodic timer drains the queue by calling \co{drain_send_queue},
 which flushes enqueued entries into the ring as slots become free. From the
@@ -57,18 +58,18 @@ and replies exceed one cache line and must be split across multiple slots. These
 \textit{multi-slot }messages consist of a \textit{header slot} followed by one or
 more \textit{continuation slots}. The header encodes the message tag, the total
 number of words in the message, and the first five data words. Continuation slots
-carry the remaining data words.\newline
+carry the remaining data words. In one byte the message tag encodes the RPC operation and
+the message's role in the protocol: request header, reply header, request
+continuation, or reply continuation\newline
  \newline
 \noindent
 To reassemble multi-slot messages before dispatching them, we introduce two
 auxiliary tables. \co{pending_recv} is used by the receiver to buffer and
 assemble incoming multi-slot requests until all continuation slots have arrived.
 \co{pending_replies} is the symmetric table used by the requestor to buffer
-incoming multi-slot replies. These tables are statically sized and allocated. In one byte the message tag encodes the RPC operation and
-the slot's role in the protocol: request header, reply header, request
-continuation, or reply continuation. Importantly, the message tag also encodes
-the index into the tables (which are symmetrically indexed) as a means of uniquely identifying which transaction a
-particular message belongs to (still in the same byte). This ensures that messages are assembled and dispatched
+incoming multi-slot replies. These tables are statically sized and allocated. Importantly, the message tag also encodes
+the index into the tables (which are symmetrically indexed) as a means of uniquely identifying to which transaction a
+particular message belongs. This ensures that messages are assembled and dispatched
 atomically even in the presence of non-atomic sends (messages for different operations may interleave).
 When a message is fully constructed, it is "dispatched", the actual behavior of the dispatch depends
 on if the domain is the original requestor (i.e. write end) or the receiver (i.e. read end) for the message.
