@@ -31,7 +31,7 @@
 \contentsline {subsection}{Handling Incoming Messages}{12}{subsection*.32}%
 \contentsline {subsection}{Requestor}{13}{subsection*.33}%
 \contentsline {subsubsection}{Facilitating Global Operations}{13}{subsubsection*.34}%
-\contentsline {subsection}{Receiver}{13}{subsection*.35}%
+\contentsline {subsection}{Receiver}{14}{subsection*.35}%
 \contentsline {subsection}{Concurrent UMP Operations}{14}{subsection*.36}%
 \contentsline {section}{Extension For Shell}{15}{section*.37}%
 \contentsline {subsection}{API Extension}{15}{subsection*.38}%

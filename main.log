@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  4 JUN 2026 11:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  4 JUN 2026 13:54
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -553,12 +553,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 36--76
  []
 
 [12]
-Underfull \hbox (badness 10000) in paragraph at lines 110--117
+Underfull \hbox (badness 10000) in paragraph at lines 111--118
 
  []
 
 
-Overfull \hbox (43.6779pt too wide) in paragraph at lines 110--117
+Overfull \hbox (43.6779pt too wide) in paragraph at lines 111--118
 \T1/cmr/m/n/10 (-20) When init re-ceives an LMP re-quest, it de-ter-mines the tar-get core. For []\T1/cmtt/m/n/10 aos_rpc_proc_spawn_with_cmdline()[]\T1/cmr/m/n/10 (-20) ,
  []
 
@@ -566,15 +566,15 @@ Overfull \hbox (43.6779pt too wide) in paragraph at lines 110--117
 <experiments/m6_contention/penbding_replies_size.png, id=308, 722.7pt x 361.35pt>
 File: experiments/m6_contention/penbding_replies_size.png Graphic file (type png)
 <use experiments/m6_contention/penbding_replies_size.png>
-Package pdftex.def Info: experiments/m6_contention/penbding_replies_size.png  used on input line 162.
+Package pdftex.def Info: experiments/m6_contention/penbding_replies_size.png  used on input line 163.
 (pdftex.def)             Requested size: 424.06033pt x 212.03125pt.
 
-Overfull \hbox (0.87259pt too wide) in paragraph at lines 168--180
+Overfull \hbox (0.87259pt too wide) in paragraph at lines 169--181
 \T1/cmr/m/n/10 (-20) The re-sults are ex-actly as ex-pected, per-for-mance scales lin-early for each ad-di-tional []\T1/cmtt/m/n/10 pending_replies[]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 168--180
+Underfull \hbox (badness 10000) in paragraph at lines 169--181
 
  []
 
@@ -595,7 +595,7 @@ Here is how much of TeX's memory you used:
  1141 hyphenation exceptions out of 8191
  75i,7n,79p,1051b,2071s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfti1000.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sftt0900.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb>
-Output written on main.pdf (16 pages, 454693 bytes).
+Output written on main.pdf (16 pages, 454838 bytes).
 PDF statistics:
  393 PDF objects out of 1000 (max. 8388607)
  336 compressed objects within 4 object streams

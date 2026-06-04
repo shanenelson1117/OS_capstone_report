@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1780598922.92109 "/Users/shanenelson/Classes/481a/CSE481A_labreport/main.tex" "main.pdf" "main" 1780598924.02836 0
+["pdflatex"] 1780606442.82079 "/Users/shanenelson/Classes/481a/CSE481A_labreport/main.tex" "main.pdf" "main" 1780606443.96885 0
   "/Users/shanenelson/Classes/481a/CSE481A_labreport/main.tex" 1780597554.55693 1508 295fabc76df9eaa65e0e2a30f0bd0bf4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
@@ -123,13 +123,13 @@
   "images/naive_purple.png" 1780372904.04262 46979 61aa4c84d422b69ff1852ee662b21d04 ""
   "images/perthread_purple.png" 1780372909.69008 46949 f9802af8980f7c34ef7af668500cad93 ""
   "images/waiting.png" 1780372899.82464 20470 0616fe6ab437527213908c5aa07cde22 ""
-  "main.aux" 1780598923.92694 8512 a800bdc01c44e8fd4a5e556e9fbfd2c9 "pdflatex"
-  "main.out" 1780598923.92824 4902 9d019fba5fbfc306173c2b4cc3439d60 "pdflatex"
+  "main.aux" 1780606443.86782 8512 753c51c07eed7882b89c09ff1a5de683 "pdflatex"
+  "main.out" 1780606443.86891 4902 9d019fba5fbfc306173c2b4cc3439d60 "pdflatex"
   "main.tex" 1780597554.55693 1508 295fabc76df9eaa65e0e2a30f0bd0bf4 ""
-  "main.toc" 1780598923.92853 2881 a6496713f93b1a244e0a406680faf24f "pdflatex"
-  "multicore.tex" 1780597554.55759 7370 32a48bb262d93b1182c07840ae2f524e ""
-  "rpc.tex" 1780545883.99452 16145 80018e12c49fe50143fbf7616c3c6c02 ""
-  "urpc.tex" 1780598921.56934 12844 fa53d7acd00cfe4847ca7e1ac3cce2b5 ""
+  "main.toc" 1780606443.86916 2881 99bef585008357915f49e54a5090d969 "pdflatex"
+  "multicore.tex" 1780606236.22893 7370 32a48bb262d93b1182c07840ae2f524e ""
+  "rpc.tex" 1780606267.75698 16145 80018e12c49fe50143fbf7616c3c6c02 ""
+  "urpc.tex" 1780606442.64167 12925 87b429b94f5440c1d7eb7825332d7766 ""
   (generated)
   "main.aux"
   "main.log"

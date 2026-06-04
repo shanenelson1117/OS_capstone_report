@@ -74,7 +74,8 @@ atomically even in the presence of non-atomic sends (messages for different oper
 When a message is fully constructed, it is "dispatched", the actual behavior of the dispatch depends
 on if the domain is the original requestor (i.e. write end) or the receiver (i.e. read end) for the message.
 
-\subsection{Handling Incoming Messages}
+\subsection{Handling Incoming Messages} 
+TODO: talk about deffered timer and how it woeks a bit, then jump into this. \\
 When the timer set on init fires, execution is started in the timer handler function. The timer handler function, \co{ump_poll_handler()}, loops through all UMP channels and processes any messages which may have
  been received. Based on the message type, the handler does the following:
  \begin{description}
