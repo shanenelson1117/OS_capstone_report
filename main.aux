@@ -34,17 +34,23 @@
 \@writefile{toc}{\contentsline {section}{Development Process}{7}{section*.20}\protected@file@percent }
 \@writefile{toc}{\contentsline {chapter}{M6: User-Level Message Passing (UMP)}{8}{chapter*.21}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{Architecture Overview}{8}{section*.22}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{Requestor}{8}{subsection*.23}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{Receiver}{8}{subsection*.24}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{Extension For Shell}{8}{section*.25}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{API Extension}{8}{subsection*.26}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{Optimized (Implemented) Design}{8}{subsection*.27}\protected@file@percent }
-\newlabel{sec:m6_optimized}{{}{8}{Optimized (Implemented) Design}{subsection*.27}{}}
-\@writefile{toc}{\contentsline {subsection}{Alternative (Naive) Design}{8}{subsection*.28}\protected@file@percent }
-\newlabel{sec:m6_naive}{{}{8}{Alternative (Naive) Design}{subsection*.28}{}}
-\@writefile{toc}{\contentsline {section}{Performance Evaluation}{8}{section*.29}\protected@file@percent }
-\newlabel{sec:m6_performance-opt}{{}{8}{Performance Evaluation}{section*.29}{}}
-\@writefile{toc}{\contentsline {subsection}{Microbenchmarks}{8}{subsection*.30}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{Results}{8}{subsection*.31}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{Development Process}{8}{section*.32}\protected@file@percent }
-\gdef \@abspage@last{9}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Abstracted view of the RPC system.}}{8}{figure.0.5}\protected@file@percent }
+\newlabel{fig:m6over}{{5}{8}{Abstracted view of the RPC system}{figure.0.5}{}}
+\@writefile{toc}{\contentsline {subsection}{Initializing UMP Channels}{8}{subsection*.23}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Memory Layout of UMP Channel}{9}{subsection*.24}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Handling Incoming Messages}{9}{subsection*.25}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Requestor}{10}{subsection*.26}\protected@file@percent }
+\newlabel{sec:requestor}{{}{10}{Requestor}{subsection*.26}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Facilitating Global Operations}{10}{subsubsection*.27}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Receiver}{10}{subsection*.28}\protected@file@percent }
+\newlabel{sec:receiver}{{}{10}{Receiver}{subsection*.28}{}}
+\@writefile{toc}{\contentsline {subsection}{Concurrent UMP Operations}{11}{subsection*.29}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Performance scales linearly with the number of slots in {\textcolor {codeblue}{\textbf  {\texttt  {pending_replies}}}}, until there are enough slots for each thread at which point there are no additional returns.}}{11}{figure.0.6}\protected@file@percent }
+\newlabel{fig:16threads}{{6}{11}{Performance scales linearly with the number of slots in \co {pending_replies}, until there are enough slots for each thread at which point there are no additional returns}{figure.0.6}{}}
+\@writefile{toc}{\contentsline {section}{Extension For Shell}{12}{section*.30}\protected@file@percent }
+\newlabel{sec:shell_extension}{{}{12}{Extension For Shell}{section*.30}{}}
+\@writefile{toc}{\contentsline {subsection}{API Extension}{12}{subsection*.31}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Arbitrary Channels}{12}{subsection*.32}\protected@file@percent }
+\newlabel{sec:m6_optimized}{{}{12}{Arbitrary Channels}{subsection*.32}{}}
+\@writefile{toc}{\contentsline {section}{Development Process}{12}{section*.33}\protected@file@percent }
+\gdef \@abspage@last{13}

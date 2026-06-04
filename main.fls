@@ -1,8 +1,8 @@
-PWD /Users/shanenelson/Downloads/CSE481A_labreport
+PWD /Users/shanenelson/Classes/481a/CSE481A_labreport
 INPUT /usr/local/texlive/2026/texmf.cnf
 INPUT /usr/local/texlive/2026/texmf-dist/web2c/texmf.cnf
 INPUT /usr/local/texlive/2026/texmf-var/web2c/pdftex/pdflatex.fmt
-INPUT /Users/shanenelson/Downloads/CSE481A_labreport/main.tex
+INPUT /Users/shanenelson/Classes/481a/CSE481A_labreport/main.tex
 OUTPUT main.log
 INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/base/report.cls
 INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/base/report.cls
@@ -223,6 +223,17 @@ INPUT ./images/waiting.png
 INPUT ./urpc.tex
 INPUT ./urpc.tex
 INPUT urpc.tex
+INPUT ./images/m6.png
+INPUT ./images/m6.png
+INPUT ./images/m6.png
+INPUT ./images/m6.png
+INPUT ./images/m6.png
+INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/jknappen/ec/ecti1000.tfm
+INPUT ./experiments/m6_contention/penbding_replies_size.png
+INPUT ./experiments/m6_contention/penbding_replies_size.png
+INPUT ./experiments/m6_contention/penbding_replies_size.png
+INPUT ./experiments/m6_contention/penbding_replies_size.png
+INPUT ./experiments/m6_contention/penbding_replies_size.png
 INPUT main.aux
 INPUT ./main.out
 INPUT ./main.out
@@ -233,4 +244,5 @@ INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pf
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb
+INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfti1000.pfb
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb
