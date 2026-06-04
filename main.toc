@@ -17,16 +17,23 @@
 \contentsline {subsubsection}{Microbenchmarks}{5}{subsubsection*.18}%
 \contentsline {subsubsection}{Results}{5}{subsubsection*.19}%
 \contentsline {section}{Development Process}{7}{section*.20}%
-\contentsline {chapter}{M6: User-Level Message Passing (UMP)}{8}{chapter*.21}%
+\contentsline {chapter}{M5: Multicore}{8}{chapter*.21}%
 \contentsline {section}{Architecture Overview}{8}{section*.22}%
-\contentsline {subsection}{Initializing UMP Channels}{8}{subsection*.23}%
-\contentsline {subsection}{Memory Layout of UMP Channel}{9}{subsection*.24}%
-\contentsline {subsection}{Handling Incoming Messages}{9}{subsection*.25}%
-\contentsline {subsection}{Requestor}{10}{subsection*.26}%
-\contentsline {subsubsection}{Facilitating Global Operations}{10}{subsubsection*.27}%
-\contentsline {subsection}{Receiver}{10}{subsection*.28}%
-\contentsline {subsection}{Concurrent UMP Operations}{11}{subsection*.29}%
-\contentsline {section}{Extension For Shell}{12}{section*.30}%
-\contentsline {subsection}{API Extension}{12}{subsection*.31}%
-\contentsline {subsection}{Arbitrary Channels}{12}{subsection*.32}%
-\contentsline {section}{Development Process}{12}{section*.33}%
+\contentsline {subsection}{Initial URPC Frame}{8}{subsection*.23}%
+\contentsline {subsection}{Booting Another Core}{9}{subsection*.24}%
+\contentsline {subsection}{Multicore Memory Management}{9}{subsection*.25}%
+\contentsline {subsection}{Suspend, Resume, Shutdown, and Reboot}{10}{subsection*.26}%
+\contentsline {section}{Development Process}{10}{section*.27}%
+\contentsline {chapter}{M6: User-Level Message Passing (UMP)}{11}{chapter*.28}%
+\contentsline {section}{Architecture Overview}{11}{section*.29}%
+\contentsline {subsection}{Initializing UMP Channels}{11}{subsection*.30}%
+\contentsline {subsection}{Memory Layout of UMP Channel}{12}{subsection*.31}%
+\contentsline {subsection}{Handling Incoming Messages}{12}{subsection*.32}%
+\contentsline {subsection}{Requestor}{13}{subsection*.33}%
+\contentsline {subsubsection}{Facilitating Global Operations}{13}{subsubsection*.34}%
+\contentsline {subsection}{Receiver}{13}{subsection*.35}%
+\contentsline {subsection}{Concurrent UMP Operations}{14}{subsection*.36}%
+\contentsline {section}{Extension For Shell}{15}{section*.37}%
+\contentsline {subsection}{API Extension}{15}{subsection*.38}%
+\contentsline {subsection}{Arbitrary Channels}{15}{subsection*.39}%
+\contentsline {section}{Development Process}{15}{section*.40}%

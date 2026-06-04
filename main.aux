@@ -1,5 +1,16 @@
 \relax 
 \providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
 \@writefile{toc}{\contentsline {chapter}{M4: Core-Local Message Passing (LMP)}{2}{chapter*.2}\protected@file@percent }
@@ -32,25 +43,34 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Performance drop-off from running a multithreaded workload (MTW) without a thread waiting on a process to finish, to running one with a thread waiting. Per process lmp channels perform > 1000\% worse while a thread is waiting, whereas per-thread channels see only a modest 26\% cycle gain.}}{7}{figure.0.4}\protected@file@percent }
 \newlabel{fig:bench-mtw}{{4}{7}{Performance drop-off from running a multithreaded workload (MTW) without a thread waiting on a process to finish, to running one with a thread waiting. Per process lmp channels perform > 1000\% worse while a thread is waiting, whereas per-thread channels see only a modest 26\% cycle gain}{figure.0.4}{}}
 \@writefile{toc}{\contentsline {section}{Development Process}{7}{section*.20}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{M6: User-Level Message Passing (UMP)}{8}{chapter*.21}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{M5: Multicore}{8}{chapter*.21}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{Architecture Overview}{8}{section*.22}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Abstracted view of the RPC system.}}{8}{figure.0.5}\protected@file@percent }
-\newlabel{fig:m6over}{{5}{8}{Abstracted view of the RPC system}{figure.0.5}{}}
-\@writefile{toc}{\contentsline {subsection}{Initializing UMP Channels}{8}{subsection*.23}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{Memory Layout of UMP Channel}{9}{subsection*.24}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{Handling Incoming Messages}{9}{subsection*.25}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{Requestor}{10}{subsection*.26}\protected@file@percent }
-\newlabel{sec:requestor}{{}{10}{Requestor}{subsection*.26}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Facilitating Global Operations}{10}{subsubsection*.27}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{Receiver}{10}{subsection*.28}\protected@file@percent }
-\newlabel{sec:receiver}{{}{10}{Receiver}{subsection*.28}{}}
-\@writefile{toc}{\contentsline {subsection}{Concurrent UMP Operations}{11}{subsection*.29}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Performance scales linearly with the number of slots in {\textcolor {codeblue}{\textbf  {\texttt  {pending_replies}}}}, until there are enough slots for each thread at which point there are no additional returns.}}{11}{figure.0.6}\protected@file@percent }
-\newlabel{fig:16threads}{{6}{11}{Performance scales linearly with the number of slots in \co {pending_replies}, until there are enough slots for each thread at which point there are no additional returns}{figure.0.6}{}}
-\@writefile{toc}{\contentsline {section}{Extension For Shell}{12}{section*.30}\protected@file@percent }
-\newlabel{sec:shell_extension}{{}{12}{Extension For Shell}{section*.30}{}}
-\@writefile{toc}{\contentsline {subsection}{API Extension}{12}{subsection*.31}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{Arbitrary Channels}{12}{subsection*.32}\protected@file@percent }
-\newlabel{sec:m6_optimized}{{}{12}{Arbitrary Channels}{subsection*.32}{}}
-\@writefile{toc}{\contentsline {section}{Development Process}{12}{section*.33}\protected@file@percent }
-\gdef \@abspage@last{13}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Multicore Architecture}}{8}{figure.0.5}\protected@file@percent }
+\newlabel{fig:m5arch}{{5}{8}{Multicore Architecture}{figure.0.5}{}}
+\@writefile{toc}{\contentsline {subsection}{Initial URPC Frame}{8}{subsection*.23}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Booting Another Core}{9}{subsection*.24}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Multicore Memory Management}{9}{subsection*.25}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Suspend, Resume, Shutdown, and Reboot}{10}{subsection*.26}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Development Process}{10}{section*.27}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{M6: User-Level Message Passing (UMP)}{11}{chapter*.28}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Architecture Overview}{11}{section*.29}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Abstracted view of the RPC system.}}{11}{figure.0.6}\protected@file@percent }
+\newlabel{fig:m6over}{{6}{11}{Abstracted view of the RPC system}{figure.0.6}{}}
+\@writefile{toc}{\contentsline {subsection}{Initializing UMP Channels}{11}{subsection*.30}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Memory Layout of UMP Channel}{12}{subsection*.31}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Handling Incoming Messages}{12}{subsection*.32}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Requestor}{13}{subsection*.33}\protected@file@percent }
+\newlabel{sec:requestor}{{}{13}{Requestor}{subsection*.33}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Facilitating Global Operations}{13}{subsubsection*.34}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Receiver}{13}{subsection*.35}\protected@file@percent }
+\newlabel{sec:receiver}{{}{13}{Receiver}{subsection*.35}{}}
+\@writefile{toc}{\contentsline {subsection}{Concurrent UMP Operations}{14}{subsection*.36}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Performance scales linearly with the number of slots in {\textcolor {codeblue}{\textbf  {\texttt  {pending_replies}}}}, until there are enough slots for each thread at which point there are no additional returns.}}{14}{figure.0.7}\protected@file@percent }
+\newlabel{fig:16threads}{{7}{14}{Performance scales linearly with the number of slots in \co {pending_replies}, until there are enough slots for each thread at which point there are no additional returns}{figure.0.7}{}}
+\@writefile{toc}{\contentsline {section}{Extension For Shell}{15}{section*.37}\protected@file@percent }
+\newlabel{sec:shell_extension}{{}{15}{Extension For Shell}{section*.37}{}}
+\@writefile{toc}{\contentsline {subsection}{API Extension}{15}{subsection*.38}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Arbitrary Channels}{15}{subsection*.39}\protected@file@percent }
+\newlabel{sec:m6_optimized}{{}{15}{Arbitrary Channels}{subsection*.39}{}}
+\@writefile{toc}{\contentsline {section}{Development Process}{15}{section*.40}\protected@file@percent }
+\gdef \@abspage@last{16}
