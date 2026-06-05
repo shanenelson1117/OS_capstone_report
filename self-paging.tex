@@ -1,3 +1,344 @@
-\section{Virtual Memory}
+\chapter*{M2: Virtual Memory}{\textbf{Author: Chenyi Wang}
+\newline 
+ \newline 
+ The goal of this milestone is to enable user-level processes to manage their virtual address spaces.}
+\addcontentsline{toc}{chapter}{M2: Virtual Memory}
+\section{Architecture Overview}
+\subsection{Page table representation}
 
-TODO
+We keep a software shadow tree of the hardware page tables so we can find any
+mapping by virtual address without re walking the live tables. The data
+structure is struct shadow\_pt in include/aos/paging\_types.h, one node per
+hardware L0/L1/L2/L3 table, carrying the capref of that vnode, the mapping
+cap that installed it into its parent, and a 512 entry children array
+indexed by the same PTE slot that the hardware would use. The L0 root
+is at paging\_state.l0\_shadow and is built in paging\_init\_state. Levels
+below it are created lazily by ensure\_l3 the first time a mapping touches
+that subtree. We never pre allocate a level we have not used.
+
+This mirror is what makes unmap and shadow tree walks cheap. Without it we
+would either have to traverse the kernel page tables through the cap system,
+which is not part of the user side API, or remember every pair in a list, which scales poorly.
+
+Also for the future we can use balanced shadow tree to make the search more easier. Another advantage the shadow tree have is that if we want to support super page and then we can just allow the leaf node directly attach on the L0/L1/L2 level of tree based on how large the super page is, This feature is hard to be support by other data structures.
+
+\subsection{Virtual address space tracking}
+
+The free and allocated VA regions live in a single sorted doubly linked list
+of struct vregion, rooted at paging\_state.vregions. Each
+node carries base, size, an allocated flag, and pointers to its neighbours.
+On init the list contains one big free region from start\_vaddr to
+MAX\_VA\_ADDR is 0x7f.
+
+paging\_alloc walks the list, picks the first free node large enough, splits
+off the wasted front for alignment using vr\_split\_front and splits off any
+excess at the back using vr\_split\_back, then marks the result allocated.
+paging\_unmap reverses the process, clear the runs, mark the vregion free,
+then coalesce with the previous and next neighbours if they are also free.
+vr\_coalesce is the only place that drops nodes back to the slab. The list
+is kept sorted by base address as an invariant of the splits, which is what
+lets us walk it forwards and find any address in O(N).
+
+We chose a linked list over a balanced tree because the working set of
+vregions is small in practice and the constant factor on a tree node was not worth
+the extra slab pressure. If a future workload pushes the list into the
+thousands we would switch to a red black tree without changing any caller.
+
+\subsection{Map and unmap}
+
+paging\_map\_frame\_attr\_offset is the workhorse, ensure the helper slabs
+have room, possibly trigger a root cnode refill, call paging\_alloc to
+reserve VA, then call do\_map to install the PTEs.
+
+do\_map chunks the requested region at L3 boundaries and
+issues one vnode\_map per chunk. For each chunk it records a vregion\_run
+holding the L3 shadow node, the starting slot, the page count, and the
+mapping cap. The runs form a per vregion list rooted at vregion.runs.
+Recording the chunks instead of synthesising them later is what makes
+paging\_unmap simple, it walks vregion.runs, calls vnode\_unmap plus
+cap\_destroy per run, frees the run nodes back to the slab, and is done.
+The unmap path never re walks the shadow tree.
+
+paging\_map\_fixed\_attr\_offset shares do\_map and the run tracking. It
+adds a containment check, find the unique free vregion that fully contains
+[vaddr, vaddr+bytes), reject if the range overlaps any allocated region,
+otherwise carve and install. This is the path V02 and V05 stress with
+overlap rejection requirements.
+
+\subsection{Lazy Heap Allocation}
+
+morecore\_alloc only reserves virtual address space; it never touches a
+physical frame. lib/aos/morecore.c calls paging\_alloc with the requested
+size and returns the base address. The cost of a malloc is O(1)
+in the number of pages, independent of how big the allocation is. The book
+suggested implementing eager mapping first and switching to lazy later. We
+implemented lazy from the start because the work to back up an unmapped
+heap with a page fault handler was already required for the grading tests,
+and bolting eager mapping on top would have been throwaway code.
+
+morecore\_free walks the vregion list to find the region that contains the
+freed pointer, then calls paging\_unmap on its base address. This means the
+full VA region returns to the free pool in one shot, which is fine because
+malloc and free always pair on the same vregion base address.
+
+The lazy design has the consequence that any heap miss inside the bench
+harness shows up as a page fault, not as a malloc cost. This is exactly the
+property MB3 in our benchmark relies on.
+
+\subsection{Page Fault Handler}
+
+pagefault\_handler in lib/aos/paging.c is registered once for the main
+thread in set\_main\_handler and once per additional thread in
+paging\_init\_onthread. The handler is small on purpose. It rejects any
+fault at an address below NULL\_GUARD\_ADDR = 32 MiB as a null dereference,
+walks the vregion list to find the allocated region that owns the faulting
+page, makes sure the helper slabs have room, allocates one BASE\_PAGE\_SIZE
+frame, builds the L3 shadow node via ensure\_l3 if it does not exist yet,
+and installs exactly one PTE through vnode\_map. The new run is pushed onto
+the vregion.runs list so paging\_unmap can find it later.
+
+There are two non obvious decisions in the handler. First, we do not go
+through paging\_map\_fixed\_attr\_offset even though it looks like the right
+abstraction, because that path rejects already allocated vregions and would
+loop the fault forever. We install the PTE directly. Second, all three
+ensure\_X\_slab calls run before frame\_alloc, so the handler never
+recurses into itself by faulting on a slab refill while servicing a fault.
+
+\subsection{Slab Allocators}
+
+We carry three slabs in struct paging\_state, pt\_slab for shadow\_pt
+nodes, vr\_slab for vregion nodes, and run\_slab for vregion\_run nodes.
+Each is sized differently because shadow\_pt is roughly 4 KiB while vregion and vregion\_run are
+small. The init paging state is seeded from three file static buffers, so the very first
+allocations never have to go through the slab refill path that itself
+needs paging.
+
+Once those static buffers are warm, the slabs grow on demand through
+ensure\_vr\_slab, ensure\_run\_slab, ensure\_pt\_slab. Each calls
+slab\_refill\_no\_pagefault, which allocates a frame and maps it through
+paging\_map\_frame\_attr. The three ensure\_X\_slab functions share a
+re entrancy guard pattern, any one
+of them being mid refill blocks the others from refilling too. This is
+required because slab\_refill\_no\_pagefault calls back into
+paging\_map\_frame\_attr\_offset, which would otherwise drive each of the
+other two slabs to refill recursively before the outer one finishes.
+
+\subsection{Slot Allocator Refill}
+
+paging\_map\_frame\_attr\_offset and paging\_map\_fixed\_attr\_offset both
+peek at the single slot allocator state before they reserve a vregion. If
+the root cnode is down to twelve free slots, the map path triggers a manual
+root\_slot\_allocator\_refill guarded by state rootca.refilling
+so the refill path does not re enter itself. The threshold of twelve was
+picked empirically, a single map request can chew through several slots, so we want
+headroom before the slot allocator itself starts demanding new slots from
+the root.
+
+
+
+\subsection{Limitations and follow ups}
+
+The vregion free list is a plain linked list with linear time alloc and
+linear time fault handler lookup. Under heavy fragmentation this becomes
+the bottleneck; a balanced tree would fix it without changing callers.
+
+Super pages are not implemented. do\_map only emits BASE\_PAGE\_SIZE PTEs, so the flag is silently dropped. Hooking 2 MiB block PTE installation into do\_map is the next planned extension and would also enable the MB5 superpage comparison in our benchmark plan.
+
+
+\section{Evaluation}
+
+We evaluate the M2 paging subsystem with a VM PUP style microbenchmark
+modelled on Appel and Li's 1991 ASPLOS paper. All numbers below are from
+a single run on the imx8x board with the system counter at 8\,MHz. Each
+result row is emitted as a CSV line and post processed into the plots
+that follow. The reservation size used in the lazy/eager and hybrid
+experiments is fixed at 1000 pages.
+
+\subsection{Base costs}
+
+We start with the four primitive cost numbers, shown in
+Figure~\ref{fig:m2bench}. The leftmost two columns are language level
+baselines, a register to register integer add, and a write to an
+already mapped page. The rightmost two are the headline VM operations,
+mapping then unmapping a single page, and faulting in a single page
+through the user mode page fault handler.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.85\textwidth]{fig/m2_bench.png}
+    \caption{Per operation cost of the four primitives. Log scale on the y
+    axis; the four bars span roughly six orders of magnitude.}
+    \label{fig:m2bench}
+\end{figure}
+
+A bare add costs five nanoseconds and a touch on an already mapped page
+twelve nanoseconds, so the cost of installing a single page table entry
+under our paging code, including the explicit unmap, is around four
+orders of magnitude above the bare arithmetic baseline. A single
+user mode page fault is another factor of forty on top of that. This
+gap is exactly the phenomenon Appel and Li raised in 1991, and we
+revisit it below in the historical comparison.
+
+\subsection{Comparison to 1991 systems}
+
+Figure~\ref{fig,m2 appel li} compares our user mode page fault round
+trip to the seven systems Appel and Li tabulated in 1991. The left
+panel reports absolute wall clock time, the right panel reports the
+same number divided by each system's own add cost, which is the
+normalisation Appel and Li argued. Our result made their arguement more stronger.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{fig/m2_vs_appel_li.png}
+    \caption{Page fault round trip on our system against the seven 1991
+    systems tabulated in Appel and Li's paper.}
+    \label{fig,m2 appel li}
+\end{figure}
+
+In absolute time we are the fastest of the comparison set, at 220
+microseconds against a 1991 range of 300 microseconds to 3.3
+milliseconds. Once we normalise by add cost, the picture inverts, our
+fault costs about forty four thousand adds, against a 1991 range of
+two thousand to twenty eight thousand. CPUs have gained roughly three
+orders of magnitude in the intervening decades but our VM round trip
+has only halved, so the relative cost of a fault has actually grown.
+The complaint Appel and Li levelled in 1991 still applies, only more
+so. The cost of crossing into the kernel and back, even on a modern
+ARMv8 with a user mode page fault handler that we wrote ourselves, has
+not kept up with the rest of the machine.
+
+\subsection{Allocation Strategies Across "Touch Ratios"}
+
+For the comparison between lazy and eager allocation we vary the
+fraction of the reserved region that is actually touched, from ten
+percent up to one hundred percent in steps of ten.
+Figure~\ref{fig,m2 lve sweep} shows both panels, physical frames
+committed on the left, total wall clock time on the right.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{fig/m2_lve_sweep.png}
+    \caption{Lazy versus eager as the touched fraction of the
+    reservation grows. Reservation is 1000 pages throughout.}
+    \label{fig,m2 lve sweep}
+\end{figure}
+
+The frame plot reproduces the obvious story very cleanly. Lazy tracks
+the diagonal, it commits one frame for each page that is actually
+touched, plus a small constant overhead from the slab allocator and
+the page fault path itself. Eager sits flat at one thousand frames
+regardless of how many of them get used, because the reservation is
+satisfied by a single batch map up front. At a ten percent touch
+ratio, eager is committing ten times more physical memory than the
+workload actually requires.
+
+The time plot is the corresponding cost. Eager stays in the low tens
+of microseconds across the entire sweep, dominated by the one shot
+batch map. Lazy starts at about 280 milliseconds for one hundred
+faults and grows roughly linearly with the number of faulted pages,
+reaching seven seconds at one thousand pages. The two curves never
+cross. As long as we are willing to pay for physical memory up front,
+eager is two to five orders of magnitude faster than lazy on this
+hardware.
+
+\subsection{Hybrid Strategy Under Random Access}
+
+The natural next question is whether a strategy that pre maps some of
+the reservation eagerly and lets the rest fault in lazily can beat
+either endpoint. Pre mapping costs memory but eliminates faults on
+hits, so the answer depends on what fraction of the touches hit the
+pre mapped pages.
+
+To stay honest we drive this experiment with a random access pattern. The bench seeds the C library random
+number generator from the system counter and issues each touch at a
+uniformly random index over the whole reservation, so the access
+pattern carries no oracle information about which pages will turn out
+to be hot. A touch falls in the pre mapped region with
+probability proportional to the size of that region, and hits the
+lazy region the rest of the time.
+
+Figure~\ref{fig,m2 hybrid} sweeps the pre load region size across 0\% to 100\%, with touching rondom 100 pages each. The two dashed reference lines are pure lazy and pure eager at the same touch count.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.85\textwidth]{fig/m2_hybrid.png}
+    \caption{Hybrid latency as the eager region grows from zero to the
+    full reservation. Random touch pattern, 100 touches.}
+    \label{fig,m2 hybrid}
+\end{figure}
+
+The curve sits within a factor of three of the pure lazy reference for
+every intermediate size we tested. Even with five hundred pages
+pre mapped the wall clock time only drops to
+about 200 milliseconds, against pure lazy's 355 milliseconds. The
+cliff that finally takes the line down to nine microseconds appears
+only at the right edge of the sweep, where the eager region equals
+the full reservation and there is no lazy region to fault into. In
+other words, on random access the hybrid policy degenerates, unless
+you pre map essentially everything you might touch, the touches that
+miss the pre mapped region still pay the full per fault cost, and the
+small expected number of hits is not enough to move the total.
+
+The narrow sweep in Figure~\ref{fig,m2 hybrid mix} zooms into the
+region where the pre mapped size and the touch count match, varying
+the eager region from ten to one hundred pages.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{fig/m2_hybrid_mix.png}
+    \caption{Hybrid frames and latency for small eager regions, with
+    a fixed 100 touch random workload over a 1000 page reservation.}
+    \label{fig,m2 hybrid mix}
+\end{figure}
+
+The frame panel grows monotonically from 108 to 187, well above the
+grey reference line that shows what the pre mapped pages alone would
+cost. The gap between the curve and the reference is the lazy region's
+contribution, roughly nine out of ten random touches still miss the
+pre mapped region and bring in a fresh frame. The latency panel is
+noisy enough that we treat the individual points with caution; the
+average sits around 700 milliseconds and shows no clean trend across
+the sweep. The committed frame count grows by about ten pages for each
+ten page increase in the pre mapped region, but the time stays in the same band as pure
+lazy.
+
+\subsection{Frames Versus Time Tradeoff}
+
+Figure~\ref{fig,m2 mem} brings the three strategies onto a single
+trade off plot. The bar chart on the left shows physical frames
+committed at a hundred touch workload, with the hybrid case shown for
+three representative pre map sizes. The scatter on the right places
+each strategy in the two dimensional space of memory cost versus
+time cost.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{fig/m2_mem.png}
+    \caption{Eager pays ten times the memory for
+    near zero touch latency; lazy and hybrid land in the same lower
+    band of memory but pay hundreds of milliseconds.}
+    \label{fig,m2 mem}
+\end{figure}
+
+Eager sits alone in the upper left of the scatter which means it commits the
+full thousand frames but the touches themselves take only two
+microseconds because every PTE is already installed. Lazy and the
+three hybrid points cluster in the lower right, all at roughly one
+hundred to two hundred frames and all at hundreds of milliseconds of
+wall clock time. Lazy is the best of that cluster, it commits the
+fewest frames and runs in the shortest time
+of any non eager option. None of the hybrid points dominate it on
+either axis.
+
+The practical conclusion for our system is that there are two
+sensible policies and no useful middle ground. If memory pressure is
+the binding constraint, lazy is the right choice; the per fault
+cost is high but the physical commit is exactly what the workload
+uses. If latency is the binding constraint and the reservation can be
+fully committed up front, eager wins by four orders of magnitude
+because it amortises the per page cost into a single batch map.
+Hybrid is dominated by lazy in the random access regime we measured.
+It would only become attractive if the access pattern were known in
+advance, in which case the pre mapped region could be sized to cover
+exactly the hot pages and the experiment would collapse back into a
+small eager allocation.
