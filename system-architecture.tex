@@ -1,0 +1,189 @@
+\chapter*{Core Operating System Overview}
+\addcontentsline{toc}{chapter}{Core Operating System Overview}
+
+\section{Introduction}
+This section gives a high-level view of the core operating system we built across
+milestones M1 through M6.  The system runs on ARMv8 (AArch64) hardware either
+emulated on QEMU or through a 4-core Toradex iMX8X board and is based off the Barrelfish
+OS. The detailed design and implementation of each subsystem are described in
+the milestone chapters that follow. This overview is a brief, high-level overview 
+of the different components we implemented and how they interact with the existing
+Barrelfish structure.
+
+% TODO
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.5\textwidth]{}
+%     \caption{Core OS Architecture}
+%     \label{fig:OSarch}
+% \end{figure}
+
+
+\section{Microkernel and Capabilities}
+
+\subsection{Minimal Trusted Core}
+The Barrelfish kernel, called the CPU driver, is a thin privileged layer that runs 
+independently on each core. Each core's CPU driver manages only the hardware directly 
+beneath it(the MMU, the interrupt controller, and the scheduling of user-space dispatchers).
+Operations that are supposed to be executed by the kernel in usual monolithic kernels
+are now handled by user-space programs. As such the kernel in Barrelfish is a microkernel.
+Microkernels only handle essential core operations and push functionality out of the
+kernel. 
+
+\medskip\noindent
+When a user-space program needs to perform a privileged action, say map a page,
+create an endpoint, boot a second core, it issues a system call that
+names a specific capability it already holds.  The kernel checks that the
+capability grants the requested permission and, if so, carries out the operation
+atomically. These type of capabilities are called partitioned capabilities.
+
+\subsection{Capabilities}
+
+Capabilities are essentially tokens that are associated with kernel operations/objects
+and represent the rights held over them. There are different types of capabilties that
+are retyped from physical memory. Namely, the following are commonly utilized within
+our implementation.
+
+\begin{itemize}[nosep]
+  \item \textbf{RAM} --- a contiguous range of physical memory that has not yet
+        been committed to any purpose.  A process that holds a RAM capability
+        can retype it into frames, page-table nodes, endpoints, or other objects.
+  \item \textbf{Frame} --- a mappable physical page. Can be installed in a page
+        table or shared with another process by transferring the capability.
+  \item \textbf{VNode} --- a hardware page-table node (L0--L3 on ARMv8). Holds
+        the mappings of a particular level of the address-space tree.
+  \item \textbf{Endpoint} --- a communication buffer in the kernel. The target
+        of a Local Message-Passing (LMP) send.
+  \item \textbf{Dispatcher} --- the scheduler context of a running domain.
+        Holding this capability allows pausing, resuming, or destroying the
+        domain.
+  \item \textbf{Kernel Control Block (KCB)} --- per-core kernel state. Must be
+        allocated and handed to the kernel before a new core can be started.
+\end{itemize}
+
+\medskip\noindent
+Capabilities live in per-process CSpaces, capability namespaces
+structured as trees of CNodes, and are never directly accessible to user code.
+To allocate capabilities and retype them into the correct capabilities, we acquire
+chunk of untyped memory, split the memory into the correct size, and then retype the
+capability into the desired type.
+
+
+\section{User-Space System Structure}
+
+
+\subsection{The \co{init} Process}
+
+On each core a single privileged user-space process called \co{init} acts
+as the system manager.  It is the first program to run after the CPU driver
+hands off execution, and it holds the initial RAM capabilities granted by 
+the bootloader.
+
+\medskip\noindent
+\co{init} is responsible for:
+
+\begin{itemize}[nosep]
+  \item Dividing physical memory among itself and the processes it spawns.
+  \item Constructing the virtual address space of each new process and loading
+        its ELF image.
+  \item Providing every OS service that other processes request via RPC.
+        Memory allocation, serial I/O, process lifecycle operations, and
+        coordination with peer cores.
+\end{itemize}
+
+\medskip\noindent
+Because \co{init} holds the only RAM capabilities in the system, no process
+can obtain memory without going through it. This gives \co{init} complete
+control over resources without any kernel support.
+
+\subsection{Child Processes}
+
+All other programs run as children of \co{init}.  A newly spawned process
+starts with almost nothing: a valid address space, a stack, its ELF image
+loaded, and the endpoint of \co{init}'s RPC server(which is a capability).
+Everything else the process needs (more memory, I/O access, knowledge of other
+processes) is obtained by sending requests to \co{init} over that channel.
+
+\medskip\noindent
+Spawning, pausing, resuming, and killing processes are all \co{init}
+responsibilities, carried out through the RPC interface(described later).  
+
+\section{Memory Management}
+
+
+Physical and virtual memory management are both implemented entirely in user
+space.
+
+\subsection{Physical Memory}
+
+\co{init} holds a pool of RAM capabilities passed up from the bootloader.
+When a process requests memory, \co{init}'s physical allocator carves a
+sub-region out of the pool, retypes it into a Frame capability, and transfers
+that capability over LMP to the requesting process.  The requesting process then
+maps the frame into its own address space using the VNode capabilities it holds.
+
+\medskip\noindent
+The kernel is involved only at the retyping step (to enforce the capability type
+system) and at the mapping step (to update the hardware MMU). Every other desicion is
+made entirely in user space through our code(size to allocate, which region to allocate, etc.).
+
+\subsection{Virtual Memory}
+
+Each process manages its own virtual address space.  The paging library
+(\co{lib/aos/paging}) tracks which virtual address ranges are free and which
+are occupied, allocates and maps page-table VNodes on demand, and installs a
+page fault handler that lazily maps frames as they are first accessed.
+
+\section{Inter-Process Communication}
+
+In a microkernel, since kernel functionality is pushed out to user-space programs.
+This means other programs can no longer invoke these services through a 
+simple function call or a syscall that touches shared kernel state. Rather it must
+send a message to the process that owns the service and wait for a reply. 
+IPC is therefore is the fundamental mechanism through which the system functions
+and is required by other processes.
+
+\medskip\noindent
+The system provides two IPC mechanisms, chosen based on whether the
+communicating parties are on the same core or on different cores.
+
+\subsection{Local Message Passing (LMP) --- Intra-Core}
+
+LMP handles communication between processes on the same core. Messages are
+deposited into a kernel-managed endpoint buffer and the receiving process is
+scheduled when a message arrives. The entire RPC protocol between child
+processes and \co{init} is built on top of LMP.
+
+\subsection{User Message Passing (UMP) --- Inter-Core}
+
+LMP endpoints cannot be shared across cores, so cross-core communication is
+implemented in user space over a shared physical frame. This makes UMP
+higher-latency than LMP, but it requires no kernel support and scales as cores
+are added.
+
+\section{The RPC Protocol}
+
+Since \co{init} owns all system resources, every process that needs memory,
+wants to spawn a child, or reads from serial I/O has to ask \co{init} for it.
+RPC gives these interactions a clean structure. Rather than ad-hoc messages,
+each service has a well-defined call and reply, making the interface between
+processes predictable and easy to extend.
+
+\medskip\noindent
+All communication between a child process and \co{init} follows a unified
+request-reply protocol, regardless of whether the underlying transport is LMP
+or UMP. From a child process's perspective, making a service request looks the
+same whether \co{init} is running on the same core or a different one. The RPC
+library handles the details: it sends a tagged request, blocks until the
+matching reply arrives, and returns the result to the caller. On the \co{init}
+side, incoming messages are dispatched to the appropriate handler. If the
+request concerns a process on a remote core, \co{init} forwards it over UMP and
+relays the reply back transparently.
+
+\section{Multi-Core}
+
+The system runs on up to four cores, each hosting its own independent
+\co{init} instance with its own memory pool and process table.  Cores
+communicate over UMP channels backed by shared physical frames, forming a
+fully-connected mesh. From the perspective of a user process, the
+system appears as a single coherent OS regardless of how many cores are active.

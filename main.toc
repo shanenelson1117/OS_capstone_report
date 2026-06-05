@@ -1,39 +1,55 @@
-\contentsline {chapter}{M4: Core-Local Message Passing (LMP)}{2}{chapter*.2}%
-\contentsline {section}{Architecture Overview}{2}{section*.3}%
-\contentsline {subsection}{Client-Side}{2}{subsection*.4}%
-\contentsline {subsubsection}{Thread-Local State}{3}{subsubsection*.5}%
-\contentsline {subsubsection}{Channel Initialization}{3}{subsubsection*.6}%
-\contentsline {subsubsection}{Synchronous Send/Receive}{3}{subsubsection*.7}%
-\contentsline {subsection}{Server-Side}{3}{subsection*.8}%
-\contentsline {subsubsection}{Handshake Protocol}{3}{subsubsection*.9}%
-\contentsline {subsubsection}{General Purpose Serving}{3}{subsubsection*.10}%
-\contentsline {subsubsection}{Special Case: {\textcolor {codeblue}{\textbf {\texttt {aos_rpc_proc_wait()}}}}}{4}{subsubsection*.11}%
-\contentsline {subsection}{Shared Memory for Large Messages}{4}{subsection*.12}%
-\contentsline {section}{Optimizations and Performance Evaluation}{4}{section*.13}%
-\contentsline {subsection}{Performance Goals and Optimizations}{4}{subsection*.14}%
-\contentsline {subsubsection}{1. Latency Reduction for Multithreaded LMP}{4}{subsubsection*.15}%
-\contentsline {subsubsection}{2. Memory Usage Reduction of Large Message Infrastructure}{4}{subsubsection*.16}%
-\contentsline {subsection}{Performance Evaluation}{5}{subsection*.17}%
-\contentsline {subsubsection}{Microbenchmarks}{5}{subsubsection*.18}%
-\contentsline {subsubsection}{Results}{5}{subsubsection*.19}%
-\contentsline {section}{Development Process}{7}{section*.20}%
-\contentsline {chapter}{M5: Multicore}{8}{chapter*.21}%
-\contentsline {section}{Architecture Overview}{8}{section*.22}%
-\contentsline {subsection}{Initial URPC Frame}{8}{subsection*.23}%
-\contentsline {subsection}{Booting Another Core}{9}{subsection*.24}%
-\contentsline {subsection}{Multicore Memory Management}{9}{subsection*.25}%
-\contentsline {subsection}{Suspend, Resume, Shutdown, and Reboot}{10}{subsection*.26}%
-\contentsline {section}{Development Process}{10}{section*.27}%
-\contentsline {chapter}{M6: User-Level Message Passing (UMP)}{11}{chapter*.28}%
-\contentsline {section}{Architecture Overview}{11}{section*.29}%
-\contentsline {subsection}{Initializing UMP Channels}{11}{subsection*.30}%
-\contentsline {subsection}{Memory Layout of UMP Channel}{12}{subsection*.31}%
-\contentsline {subsection}{Handling Incoming Messages}{12}{subsection*.32}%
-\contentsline {subsection}{Requestor}{13}{subsection*.33}%
-\contentsline {subsubsection}{Facilitating Global Operations}{13}{subsubsection*.34}%
-\contentsline {subsection}{Receiver}{14}{subsection*.35}%
-\contentsline {subsection}{Concurrent UMP Operations}{14}{subsection*.36}%
-\contentsline {section}{Extension For Shell}{15}{section*.37}%
-\contentsline {subsection}{API Extension}{15}{subsection*.38}%
-\contentsline {subsection}{Arbitrary Channels}{15}{subsection*.39}%
-\contentsline {section}{Development Process}{15}{section*.40}%
+\contentsline {chapter}{Core Operating System Overview}{3}{chapter*.2}%
+\contentsline {section}{Introduction}{3}{section*.3}%
+\contentsline {section}{Microkernel and Capabilities}{3}{section*.4}%
+\contentsline {subsection}{Minimal Trusted Core}{3}{subsection*.5}%
+\contentsline {subsection}{Capabilities}{3}{subsection*.6}%
+\contentsline {section}{User-Space System Structure}{4}{section*.7}%
+\contentsline {subsection}{The {\textcolor {codeblue}{\textbf {\texttt {init}}}} Process}{4}{subsection*.8}%
+\contentsline {subsection}{Child Processes}{4}{subsection*.9}%
+\contentsline {section}{Memory Management}{4}{section*.10}%
+\contentsline {subsection}{Physical Memory}{4}{subsection*.11}%
+\contentsline {subsection}{Virtual Memory}{4}{subsection*.12}%
+\contentsline {section}{Inter-Process Communication}{5}{section*.13}%
+\contentsline {subsection}{Local Message Passing (LMP) --- Intra-Core}{5}{subsection*.14}%
+\contentsline {subsection}{User Message Passing (UMP) --- Inter-Core}{5}{subsection*.15}%
+\contentsline {section}{The RPC Protocol}{5}{section*.16}%
+\contentsline {section}{Multi-Core}{5}{section*.17}%
+\contentsline {chapter}{M4: Core-Local Message Passing (LMP)}{6}{chapter*.18}%
+\contentsline {section}{Architecture Overview}{6}{section*.19}%
+\contentsline {subsection}{Client-Side}{6}{subsection*.20}%
+\contentsline {subsubsection}{Thread-Local State}{7}{subsubsection*.21}%
+\contentsline {subsubsection}{Channel Initialization}{7}{subsubsection*.22}%
+\contentsline {subsubsection}{Synchronous Send/Receive}{7}{subsubsection*.23}%
+\contentsline {subsection}{Server-Side}{7}{subsection*.24}%
+\contentsline {subsubsection}{Handshake Protocol}{7}{subsubsection*.25}%
+\contentsline {subsubsection}{General Purpose Serving}{7}{subsubsection*.26}%
+\contentsline {subsubsection}{Special Case: {\textcolor {codeblue}{\textbf {\texttt {aos_rpc_proc_wait()}}}}}{8}{subsubsection*.27}%
+\contentsline {subsection}{Shared Memory for Large Messages}{8}{subsection*.28}%
+\contentsline {section}{Optimizations and Performance Evaluation}{8}{section*.29}%
+\contentsline {subsection}{Performance Goals and Optimizations}{8}{subsection*.30}%
+\contentsline {subsubsection}{1. Latency Reduction for Multithreaded LMP}{8}{subsubsection*.31}%
+\contentsline {subsubsection}{2. Memory Usage Reduction of Large Message Infrastructure}{8}{subsubsection*.32}%
+\contentsline {subsection}{Performance Evaluation}{9}{subsection*.33}%
+\contentsline {subsubsection}{Microbenchmarks}{9}{subsubsection*.34}%
+\contentsline {subsubsection}{Results}{9}{subsubsection*.35}%
+\contentsline {section}{Development Process}{11}{section*.36}%
+\contentsline {chapter}{M5: Multicore}{12}{chapter*.37}%
+\contentsline {section}{Architecture Overview}{12}{section*.38}%
+\contentsline {subsection}{Initial URPC Frame}{12}{subsection*.39}%
+\contentsline {subsection}{Booting Another Core}{13}{subsection*.40}%
+\contentsline {subsection}{Multicore Memory Management}{13}{subsection*.41}%
+\contentsline {subsection}{Suspend, Resume, Shutdown, and Reboot}{14}{subsection*.42}%
+\contentsline {section}{Development Process}{14}{section*.43}%
+\contentsline {chapter}{M6: User-Level Message Passing (UMP)}{15}{chapter*.44}%
+\contentsline {section}{Architecture Overview}{15}{section*.45}%
+\contentsline {subsection}{Initializing UMP Channels}{15}{subsection*.46}%
+\contentsline {subsection}{Memory Layout of UMP Channel}{16}{subsection*.47}%
+\contentsline {subsection}{Handling Incoming Messages}{16}{subsection*.48}%
+\contentsline {subsection}{Requestor}{17}{subsection*.49}%
+\contentsline {subsubsection}{Facilitating Global Operations}{17}{subsubsection*.50}%
+\contentsline {subsection}{Receiver}{18}{subsection*.51}%
+\contentsline {subsection}{Concurrent UMP Operations}{18}{subsection*.52}%
+\contentsline {section}{Extension For Shell}{19}{section*.53}%
+\contentsline {subsection}{API Extension}{19}{subsection*.54}%
+\contentsline {subsection}{Arbitrary Channels}{19}{subsection*.55}%
+\contentsline {section}{Development Process}{19}{section*.56}%
