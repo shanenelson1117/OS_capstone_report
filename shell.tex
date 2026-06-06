@@ -52,7 +52,7 @@ errval_t aos_rpc_fs_readdir(struct aos_rpc *chan, fs_fhandle_t handle,
 \end{lstlisting}
 The corresponding handlers are added to \co{rpc_server.c} and message tags to \co{aos_rpc.h}. The shell (or user process) can specify 
 specify the flags which they want the file to be opened with, and can embedd the core which they
-prefer to create the file on by passing \co{FS_OPEN_ON_CORE(core) | FS_OPEN_CREATE} to \co{aos_rpc_fs_open()} as teh \co{flags} argument. This is intended to mirror
+prefer to create the file on by passing \co{FS_OPEN_ON_CORE(core) | FS_OPEN_CREATE} to \co{aos_rpc_fs_open()} as the \co{flags} argument. This is intended to mirror
 the spawn procedure of allowing a user to specify the core to spawn the procedure on. This works in the same way a 
 shell spawn works (\cl{$ run process ---core n}), via the \cl{---core} command line argument like so,
 \cl{$ touch file-name ---core n}. Any process can access files on any core, this is implemented with UMP redirection. To facilitate
@@ -76,7 +76,7 @@ in the following manner:
   \item The shell then creates an \co{io_config_frame} for each side of the pipe and
   spawns the processes:
   \begin{lstlisting}
-  // For the writer only (reader just sets pipe_in true and pipe_out_is_dsp 0)
+  // This omits the reader setup but it is nearly identical (the reader just sets pipe_in true and pipe_out_is_dsp 0)
   struct io_config_frame cfg = {
     .pipe_out        = true,
     .pipe_out_is_bsp = 1,
