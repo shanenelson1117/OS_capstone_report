@@ -3,7 +3,7 @@
   \newline
  The goal of this milestone is to enable inter-core communication between processes.
 \addcontentsline{toc}{chapter}{M6: User-Level Message Passing (UMP)}
-\section{Architecture Overview}
+\section{Architecture overview}
 The UMP subsystem connects the init processes of each core via a shared-memory
 frame treated as two circular ring buffers. Processes always communicate with
 their local init using LMP. When a process issues an \co{aos_rpc} call that targets a service on a remote
@@ -21,7 +21,7 @@ as required by a shell. The Archicture Overview section only discusses the infra
     \label{fig:m6over}
 \end{figure}
 
-\subsection{Initializing UMP Channels}
+\subsection{Initializing UMP channels}
 Before booting any APP cores, BSP allocates a frame for each pairwise core-to-core UMP channel
 and stores the physical address of each frame. When booting an APP core, BSP inserts the address of each of the APP 
 core's UMP frames (one for every peer core) in the \co{initial_urpc} struct along with information about which cores are online.
@@ -32,7 +32,7 @@ cores initialize their end of the UMP channel with the new core. As part of the 
 each side's init sets a deffered timer, which periodically allows it to check for received UMP messages. At this point both sides have initialized the channel
 and it is ready for use. 
 
-\subsection{Memory Layout of UMP Channel}
+\subsection{Memory layout of UMP channel}
 A UMP channel is a shared-memory frame divided into two circular ring buffers.
 Each side of the connection writes into one buffer and reads from the other.
 Each buffer is a sequence of cache-line-sized \textit{slots} with domains communicating
@@ -74,7 +74,7 @@ atomically even in the presence of non-atomic sends (messages for different oper
 When a message is fully constructed, it is "dispatched", the actual behavior of the dispatch depends
 on if the domain is the original requestor (i.e. write end) or the receiver (i.e. read end) for the message.
 
-\subsection{Handling Incoming Messages} 
+\subsection{Handling incoming messages} 
 TODO: talk about deffered timer and how it woeks a bit, then jump into this. \\
 When the timer set on init fires, execution is started in the timer handler function. The timer handler function, \co{ump_poll_handler()}, loops through all UMP channels and processes any messages which may have
  been received. Based on the message type, the handler does the following:
@@ -129,7 +129,7 @@ When the timer fires, \co{ump_poll_handler} checks for replies. If the reply is 
 the UMP reply into an LMP reply. The client LMP channel is stored in the \co{pending_replies} entry, thus init
 knows where to send the LMP reply.
 
-\subsubsection{Facilitating Global Operations}
+\subsubsection{Facilitating global operations}
 There are certain operations such as kill all and ps which require init to communicate with the init on every
 core rather than only one core's init. For such operations we find a \co{pending_replies} entry for each core
 that is online, making note that the entry is for a global operation. We then send UMP requests to each UMP channel in the exact same method as above.
@@ -147,7 +147,7 @@ which encodes that this is a UMP request. Once in the handler we execute the rpc
 UMP reply into a header and any necessary continuation messages and attempt to send them over the UMP channel.
 
 
-\subsection{Concurrent UMP Operations}
+\subsection{Concurrent UMP operations}
 The \co{pending_replies} buffer mentioned above allows our system to handle multiple
 concurrent UMP transactions. A naive implementation may elect not to have such a buffer and 
 instead only allow one outstanding UMP transaction at any point in time. This has the benefit
@@ -179,14 +179,10 @@ we choose an approach (64 slots) which allows for enough concurrency without com
 protocol and design. Future work may elect to implement a dynamic allocation scheme or otherwise allow
 the threading library (and perhaps user) to scale the available concurrency in the system.
 
-\section{Extension For Shell}
-\label{sec:shell_extension}
-
-\subsection{API Extension}
-
-\subsection{Arbitrary Channels}
-\label{sec:m6_optimized}
-
-
-\section{Development Process}
+\section{Development process}
+Allan originally implemented the infrastructure to set up a \co{struct ump_chan} as a set of
+two ring buffers and write and read from them synchronously. Shane then planned the UMP extension
+architecture, detailing the necessary changes to \co{rpc_server.c} as well as \co{ump_chan.c}
+and related headers. Shane and Sahil then implemented and debugged all the necessary changes. Shane
+then wrote this section.
 

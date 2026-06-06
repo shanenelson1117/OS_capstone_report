@@ -6,7 +6,7 @@
  allocation via intra-core remote procedure calls.}
 \addcontentsline{toc}{chapter}{M4: Core-Local Message Passing (LMP)}
 
-\section{Architecture Overview}
+\section{Architecture overview}
 Our M4 architecture is split cleanly between our client side request API contained in \newline \co{include/aos/aos_rpc.h} and our
 server side handlers contained in \co{usr/init/rpc_server.c}. This section will focus on only the content in these
 files relevant for LMP, there are many additional details in the source for these files, but these pertain to M6 and as such
@@ -17,20 +17,20 @@ are not discussed here. Figure~\ref{fig:m4arch} below is a diagram illustrating 
     \caption{Overall LMP subsystem architecture.}
     \label{fig:m4arch}
 \end{figure}
-\subsection{Client-Side}
+\subsection{Client-side}
 \label{sec:clientside}
 We choose to implement per-thread lmp channels in order to increase the available concurrency in our system.
 This allows any thread to wait on a process without blocking the progress of other threads, and a similar optimization
  was implemented by Linux (this behavior can be achieved by passing \co{__WNOTHREAD} to \co{waitid}). This also has the 
  benefit of making synchronization trivial but has the down-side of added initialization complexity.
 
-\subsubsection{Thread-Local State}
+\subsubsection{Thread-Local state}
 Each thread keeps a \co{struct aos_rpc} which stores metadata about the channel, such as the channel itself and the
 data pertaining to \hyperref[sec:shared_mem]{shared memory}. Each thread also keeps a distinct waitset which allows
 the underlying system to correctly wakeup threads when messages have arrived on their channel. The exposed \co{get_X_channel()}
 and \co{get_default_waitset()} functions are wired to use this thread-local state.
 
-\subsubsection{Channel Initialization}
+\subsubsection{Channel initialization}
 Each thread bootstraps its channel lazily on first use via a hook registered with the threading library.
 The initialization follows a two-step handshake. First the thread creates a temporary \co{lmp_chan} aimed at
 \co{cap_initep}, init's well-known global endpoint, creates a new local endpoint, and sends an \co{AOS_RPC_MSG_HANDSHAKE} message carrying
@@ -38,19 +38,19 @@ its own local endpoint capability. Init responds by allocating a dedicated per-t
 that channel's endpoint capability. The thread then replaces its \co{remote_cap} with this new per-thread endpoint,
 and all subsequent communication bypasses the global endpoint entirely.
 
-\subsubsection{Synchronous Send/Receive}
+\subsubsection{Synchronous send and receive}
 All RPCs follow a strict synchronous pattern, the client sends a tagged message via \co{safe_sendN()} (a \co{lmp_chan_send()} wrapper which transparently retries on a transient error), then
 blocks on \co{recv_msg()} until a reply arrives. \co{recv_msg()} registers a one-shot callback on the
 thread's private waitset and spins on \co{event_dispatch()} until the callback fires and marks the slot
 as done. Because each thread has its own waitset and dedicated channel, threads never race to receive each
 other's replies.
 
-\subsection{Server-Side}
+\subsection{Server-side}
 In order to facilitate per-thread channels our server maintains multiple LMP endpoints. One endpoint is a dedicated
 global listening endpoint which handles the initialization of new channels. The server also maintains one endpoint per
 user process thread, created after handshaking.
 
-\subsubsection{Handshake Protocol}
+\subsubsection{Handshake protocol}
 Client processes are initialized with a capability \co{cap_selfep} when they are initially dispatched. This capability
 points to the global endpoint. The client mints a new endpoint and sends it to init over the listening channel. This channel
 is set up to only enter in \co{init_handshake_handler}. Once in the handler the server allocates a new local endpoint
@@ -59,13 +59,13 @@ in a \co{AOS_RPC_MSG_ACK} tagged message. The server then creates a \co{struct c
  such as the \co{lmp_chan} and information pertaining to the shared memory frame used for large messages. Finally the server registers another function \co{init_recv_handler} (the general purpose entry)
 as the entry point for the newly created endpoint, and provides a closure with the created \co{struct client_state}. Now both sides can communicate on the dedicated channel.
 
-\subsubsection{General Purpose Serving}
+\subsubsection{General purpose serving}
 When a message is received on a dedicated channel, the system calls \co{init_recv_handler} and provides the closure created in the handshake. This function
 reads the message type from the first byte of the message and calls the correct handler for the desired request type. The handler which is called is determined
 using a table mapping message types (defined in \co{aos_rpc.h}) to function pointers. Once in the handler, the server will execute the desired command
 locally, and send the client back either an acknowledgement message or the result of the RPC.
 
-\subsubsection{Special Case: \co{aos_rpc_proc_wait()}}
+\subsubsection{Special case: \co{aos_rpc_proc_wait()}}
 When a thread wants to wait on a process, it must be notified via RPC when the process exits. To facilitate this, the process management function \co{prod_mgmt_register_wait()} maintains a linked list of \co{struct waiter_node}
  for each process which holds metadata about the client channel. When a client calls the wait rpc function, its channel is added to this list and it is not
 sent a response. This blocks the thread because it is waiting in a synchronous receive loop which blocks it until
@@ -74,7 +74,7 @@ This function walks the process's \co{waiter_node} linked list and sends an rpc 
  This brings the thread out of its receive loop and unblocks it.
 
 
-\subsection{Shared Memory for Large Messages}
+\subsection{Shared memory for large messages}
 \label{sec:shared_mem}
 In order to reduce the latency for large messages, we implement a shared memory frame to pass such messages. Without shared memory
  we would be forced to break large messages into cacheline-sized messages and send them one by one. This likely has large
@@ -90,7 +90,7 @@ In order to reduce the latency for large messages, we implement a shared memory 
     \item Client proceeds to whichever operation was in progress.
  \end{enumerate}
 
-\section{Optimizations and Performance Evaluation}
+\section{Optimizations and performance evaluation}
 \subsection{Performance Goals and Optimizations}
 Our performance goals for our optimizations of milestone 4 were (1) reduce the latency of multithreaded RPC, 
 and (2) reduce the memory usage of our shared-memory approach.
@@ -112,7 +112,7 @@ of the API which allows the system to run in "memory-constrained" mode which wil
 using any shared memory. We do not implement these optimizations, and importantly, due to time have not implemented memory-usage benchmarking
 to judge the performance of the optimization we did implement.
 
-\subsection{Performance Evaluation}
+\subsection{Performance evaluation}
 \label{sec:performance-opt}
 \subsubsection{Microbenchmarks}
 To facilitate comparing a non-optimized LMP implementation to our optimized implementation, we created 
@@ -181,7 +181,7 @@ imagine an application such as a shell having such behavior.
     \label{fig:bench-mtw}
 \end{figure}
 
-\section{Development Process}
+\section{Development process}
 What I will call phase 1 began with Sahil writing the client side state and handlers in  \newline \co{aos_rpc.c}/\co{aos_rpc.h} as well as the original
 initialization code in \co{barrelfish_initonthread()}. Allan then wrote the serverside entry point as well as
 wrappers for all of the per-request handlers and the implementations of the memory and serial services. Shane then

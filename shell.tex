@@ -1,3 +1,104 @@
-\section{Shell}
+\chapter*{M7: Shell}{}
+ The goal of this milestone is to enable a user to interact with the system.
+\addcontentsline{toc}{chapter}{M7: Shell}
 
-TODO
+\section{Command processing}
+
+\subsection{Background tasks}
+TODO: without the \& call join on the spawned process(es), else just let the 
+process go 
+\\
+\\
+for background tasks we might want to replicate bash behavior where it sends the process output
+with like [n]: ... if you know what I mean. If we do this then we need to redirect the output of the 
+background task to a file that we have prepended with this, then cat the file. We should have a call about this
+
+\section{RamFS file system support}
+We route all RamFS file operations through the \co{init} process. Each core has its own
+in-memory file system. In order to support this we add file system functionality to
+our RPC implementation. We add the following calls to the \co{aos_rpc} API:
+\begin{lstlisting}
+errval_t aos_rpc_fs_open(struct aos_rpc *chan, const char *path, int flags,
+                         fs_fhandle_t *ret_handle);
+
+errval_t aos_rpc_fs_close(struct aos_rpc *chan, fs_fhandle_t handle);
+
+errval_t aos_rpc_fs_read(struct aos_rpc *chan, fs_fhandle_t handle,
+                         void *buf, size_t nbytes, size_t *bytes_read);
+
+errval_t aos_rpc_fs_write(struct aos_rpc *chan, fs_fhandle_t handle,
+                          const void *buf, size_t nbytes, size_t *bytes_written);
+
+errval_t aos_rpc_fs_seek(struct aos_rpc *chan, fs_fhandle_t handle,
+                         enum fs_seekpos whence, off_t offset);
+
+errval_t aos_rpc_fs_stat(struct aos_rpc *chan, fs_fhandle_t handle,
+                         struct fs_fileinfo *info);
+
+errval_t aos_rpc_fs_mkdir(struct aos_rpc *chan, const char *path);
+
+errval_t aos_rpc_fs_rmdir(struct aos_rpc *chan, const char *path);
+
+errval_t aos_rpc_fs_remove(struct aos_rpc *chan, const char *path);
+
+errval_t aos_rpc_fs_opendir(struct aos_rpc *chan, const char *path,
+                            fs_fhandle_t *ret_handle);
+
+errval_t aos_rpc_fs_closedir(struct aos_rpc *chan, fs_fhandle_t handle);
+
+errval_t aos_rpc_fs_readdir(struct aos_rpc *chan, fs_fhandle_t handle,
+                            char **ret_name, struct fs_fileinfo *info);
+
+\end{lstlisting}
+The corresponding handlers are added to \co{rpc_server.c} and message tags to \co{aos_rpc.h}. The shell (or user process) can specify 
+specify the flags which they want the file to be opened with, and can embedd the core which they
+prefer to create the file on by passing \co{FS_OPEN_ON_CORE(core) | FS_OPEN_CREATE} to \co{aos_rpc_fs_open()} as teh \co{flags} argument. This is intended to mirror
+the spawn procedure of allowing a user to specify the core to spawn the procedure on. This works in the same way a 
+shell spawn works (\cl{$ run process ---core n}), via the \cl{---core} command line argument like so,
+\cl{$ touch file-name ---core n}. Any process can access files on any core, this is implemented with UMP redirection. To facilitate
+demultiplexing file operations to the correct core, we embed the core in the \co{fs_handle_t} in the same manner
+that the core of a process is embedded in its pid. Via this mechanism, \co{init} can route the operation to the correct
+core without intervention from the user. One important constraint is that a user must supply the \co{FS_OPEN_ON_CORE(core)} flag to access 
+cross core files (even when not creating them). This is because file systems on different cores do not share a namespace. This is 
+an area for future work as the current implementation pushes some burden to the user.
+\section{Pipes and I/O redirection}
+To enable I/O redirection we change the spawn and RPC infrastructure. Processes are spawned
+with information about where their input and output flows, then \co{aos_rpc_serial_getchar/putchar} correctly
+routes characters (TODO: line granularity not characters) to the correct endpoint. Piping I/O between processes works 
+in the following manner:
+\begin{enumerate}
+  \item The shell first creates and allocates a capability for the frame:
+  \begin{lstlisting}
+  struct capref pipe_frame;
+  size_t pipe_size;
+  frame_alloc(&pipe_frame, 2 * BASE_PAGE_SIZE, &pipe_size);
+  \end{lstlisting}
+  \item The shell then creates an \co{io_config_frame} for each side of the pipe and
+  spawns the processes:
+  \begin{lstlisting}
+  // For the writer only (reader just sets pipe_in true and pipe_out_is_dsp 0)
+  struct io_config_frame cfg = {
+    .pipe_out        = true,
+    .pipe_out_is_bsp = 1,
+    .pipe_out_bytes  = pipe_size,
+  };
+  aos_rpc_proc_spawn_with_io(rpc, "writer_bin", core, pipe_frame, &cfg, &pid1);
+
+  \end{lstlisting}
+  \item Based on \co{core}, the correct \co{init} receives this \co{aos_rpc} call, and parses the configuration.
+  \item \co{init} then creates a new frame for the IO config info and maps it into its virtual address space.
+  \item \co{init} then assembles a capability array with capabilities to the pipe frame to pass to the spawned processes.
+  \item \co{init} then spawns the process with \co{spawn_cmdline_with_caps()} which places the capabilities in the childs CSpace.
+  \item In the new process, \co{barrelfish_init_onthread()} is called which does the necessary capability operations to map the pipe frame into its VSpace.
+  \item This fills in a global variable identifying if I/O is piped or directed to a file.
+  \item \co{aos_rpc_serial_getchar/putchar} correctly writes to the pipe rather than calling \newline \co{sys_putchar/getchar}.
+\end{enumerate}
+For file redirection the process is much the same except, fields are simply set in the \co{io_config_frame} that hold
+\co{fs_handle_t} for the input and/or output file, no capability operations have to occur and are skipped with \co{NULL_CAP} checks. 
+\section{Synchronizing serial input \& output}
+TODO: Buffer calls to aos\_rpc\_serial\_getchar/putchar by only committing full lines (stop when newline char is seen) in aos\_rpc.c and route all calls to bsp init which can set
+a global flag to serialize access. Make sure only bsp init can call sys\_putchar.
+If this doesn't work find another way (maybe in the book?)
+\section{Development process}
+Shell development started when Shane implemented the infrastructure needed for file system 
+operations over RPC, as well as the code which enables spawning processes with redirected I/O.

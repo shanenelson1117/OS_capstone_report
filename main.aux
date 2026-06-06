@@ -47,26 +47,26 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Eager pays ten times the memory for near zero touch latency; lazy and hybrid land in the same lower band of memory but pay hundreds of milliseconds.}}{12}{figure.0.6}\protected@file@percent }
 \newlabel{fig,m2 mem}{{6}{12}{Eager pays ten times the memory for near zero touch latency; lazy and hybrid land in the same lower band of memory but pay hundreds of milliseconds}{figure.0.6}{}}
 \@writefile{toc}{\contentsline {chapter}{M4: Core-Local Message Passing (LMP)}{13}{chapter*.34}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{Architecture Overview}{13}{section*.35}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Architecture overview}{13}{section*.35}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Overall LMP subsystem architecture.}}{13}{figure.0.7}\protected@file@percent }
 \newlabel{fig:m4arch}{{7}{13}{Overall LMP subsystem architecture}{figure.0.7}{}}
-\@writefile{toc}{\contentsline {subsection}{Client-Side}{13}{subsection*.36}\protected@file@percent }
-\newlabel{sec:clientside}{{}{13}{Client-Side}{subsection*.36}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Thread-Local State}{14}{subsubsection*.37}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Channel Initialization}{14}{subsubsection*.38}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Synchronous Send/Receive}{14}{subsubsection*.39}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{Server-Side}{14}{subsection*.40}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Handshake Protocol}{14}{subsubsection*.41}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{General Purpose Serving}{14}{subsubsection*.42}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Special Case: {\textcolor {codeblue}{\textbf  {\texttt  {aos_rpc_proc_wait()}}}}}{15}{subsubsection*.43}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{Shared Memory for Large Messages}{15}{subsection*.44}\protected@file@percent }
-\newlabel{sec:shared_mem}{{}{15}{Shared Memory for Large Messages}{subsection*.44}{}}
-\@writefile{toc}{\contentsline {section}{Optimizations and Performance Evaluation}{15}{section*.45}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Client-side}{13}{subsection*.36}\protected@file@percent }
+\newlabel{sec:clientside}{{}{13}{Client-side}{subsection*.36}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Thread-Local state}{14}{subsubsection*.37}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Channel initialization}{14}{subsubsection*.38}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Synchronous send and receive}{14}{subsubsection*.39}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Server-side}{14}{subsection*.40}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Handshake protocol}{14}{subsubsection*.41}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{General purpose serving}{14}{subsubsection*.42}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Special case: {\textcolor {codeblue}{\textbf  {\texttt  {aos_rpc_proc_wait()}}}}}{15}{subsubsection*.43}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Shared memory for large messages}{15}{subsection*.44}\protected@file@percent }
+\newlabel{sec:shared_mem}{{}{15}{Shared memory for large messages}{subsection*.44}{}}
+\@writefile{toc}{\contentsline {section}{Optimizations and performance evaluation}{15}{section*.45}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{Performance Goals and Optimizations}{15}{subsection*.46}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{1. Latency Reduction for Multithreaded LMP}{15}{subsubsection*.47}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{2. Memory Usage Reduction of Large Message Infrastructure}{15}{subsubsection*.48}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{Performance Evaluation}{16}{subsection*.49}\protected@file@percent }
-\newlabel{sec:performance-opt}{{}{16}{Performance Evaluation}{subsection*.49}{}}
+\@writefile{toc}{\contentsline {subsection}{Performance evaluation}{16}{subsection*.49}\protected@file@percent }
+\newlabel{sec:performance-opt}{{}{16}{Performance evaluation}{subsection*.49}{}}
 \@writefile{toc}{\contentsline {subsubsection}{Microbenchmarks}{16}{subsubsection*.50}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{Results}{16}{subsubsection*.51}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Naive implementation benchmark results for a single-threaded number passing benchmark, labeled RTT, and a multithreaded string passing benchmark, labeled stress.}}{17}{figure.0.8}\protected@file@percent }
@@ -75,7 +75,7 @@
 \newlabel{fig:bench-perthread}{{9}{17}{Per-thread implementation benchmark results for a single-threaded number passing benchmark, labeled RTT, and a multithreaded string passing benchmark, labeled stress. As can be seen the overhead to create a perthread channel (evident in the median RTT statistic) is negligible compared to the baseline. The per-thread implementation sees significant gains in median multithreaded latency}{figure.0.9}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Performance drop-off from running a multithreaded workload (MTW) without a thread waiting on a process to finish, to running one with a thread waiting. Per process lmp channels perform > 1000\% worse while a thread is waiting, whereas per-thread channels see only a modest 26\% cycle gain.}}{18}{figure.0.10}\protected@file@percent }
 \newlabel{fig:bench-mtw}{{10}{18}{Performance drop-off from running a multithreaded workload (MTW) without a thread waiting on a process to finish, to running one with a thread waiting. Per process lmp channels perform > 1000\% worse while a thread is waiting, whereas per-thread channels see only a modest 26\% cycle gain}{figure.0.10}{}}
-\@writefile{toc}{\contentsline {section}{Development Process}{18}{section*.52}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Development process}{18}{section*.52}\protected@file@percent }
 \@writefile{toc}{\contentsline {chapter}{M5: Multicore}{19}{chapter*.53}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{Architecture Overview}{19}{section*.54}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Multicore Architecture}}{19}{figure.0.11}\protected@file@percent }
@@ -86,24 +86,27 @@
 \@writefile{toc}{\contentsline {subsection}{Suspend, Resume, Shutdown, and Reboot}{21}{subsection*.58}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{Development Process}{21}{section*.59}\protected@file@percent }
 \@writefile{toc}{\contentsline {chapter}{M6: User-Level Message Passing (UMP)}{22}{chapter*.60}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{Architecture Overview}{22}{section*.61}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Architecture overview}{22}{section*.61}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Abstracted view of the RPC system.}}{22}{figure.0.12}\protected@file@percent }
 \newlabel{fig:m6over}{{12}{22}{Abstracted view of the RPC system}{figure.0.12}{}}
-\@writefile{toc}{\contentsline {subsection}{Initializing UMP Channels}{22}{subsection*.62}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{Memory Layout of UMP Channel}{23}{subsection*.63}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{Handling Incoming Messages}{23}{subsection*.64}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Initializing UMP channels}{22}{subsection*.62}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Memory layout of UMP channel}{23}{subsection*.63}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Handling incoming messages}{23}{subsection*.64}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{Requestor}{24}{subsection*.65}\protected@file@percent }
 \newlabel{sec:requestor}{{}{24}{Requestor}{subsection*.65}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Facilitating Global Operations}{24}{subsubsection*.66}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Facilitating global operations}{24}{subsubsection*.66}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{Receiver}{25}{subsection*.67}\protected@file@percent }
 \newlabel{sec:receiver}{{}{25}{Receiver}{subsection*.67}{}}
-\@writefile{toc}{\contentsline {subsection}{Concurrent UMP Operations}{25}{subsection*.68}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Concurrent UMP operations}{25}{subsection*.68}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Results show linear speedup in the number of slots in {\textcolor {codeblue}{\textbf  {\texttt  {pending_replies}}}}, until there are enough slots for each thread at which point there are no additional returns.}}{25}{figure.0.13}\protected@file@percent }
 \newlabel{fig:16threads}{{13}{25}{Results show linear speedup in the number of slots in \co {pending_replies}, until there are enough slots for each thread at which point there are no additional returns}{figure.0.13}{}}
-\@writefile{toc}{\contentsline {section}{Extension For Shell}{26}{section*.69}\protected@file@percent }
-\newlabel{sec:shell_extension}{{}{26}{Extension For Shell}{section*.69}{}}
-\@writefile{toc}{\contentsline {subsection}{API Extension}{26}{subsection*.70}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{Arbitrary Channels}{26}{subsection*.71}\protected@file@percent }
-\newlabel{sec:m6_optimized}{{}{26}{Arbitrary Channels}{subsection*.71}{}}
-\@writefile{toc}{\contentsline {section}{Development Process}{26}{section*.72}\protected@file@percent }
-\gdef \@abspage@last{27}
+\@writefile{toc}{\contentsline {section}{Development process}{26}{section*.69}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{M7: Shell}{27}{chapter*.70}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Command processing}{27}{section*.71}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Background tasks}{27}{subsection*.72}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{RamFS file system support}{27}{section*.73}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Pipes and I/O redirection}{28}{section*.74}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Synchronizing serial input \& output}{29}{section*.75}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Development process}{29}{section*.76}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{Appendix A: Shell Commands}{30}{chapter*.77}\protected@file@percent }
+\gdef \@abspage@last{31}

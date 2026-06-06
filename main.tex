@@ -16,9 +16,14 @@
 % use \co{} for inline code typefacing
 \usepackage{xcolor}
 \definecolor{codeblue}{RGB}{80,80,140}
+\definecolor{codered}{RGB}{160,40,100}
 \definecolor{codebg}{RGB}{245,245,245}
 \newcommand{\co}[1]{%
   {\textcolor{codeblue}{\textbf{\texttt{\detokenize{#1}}}}}%
+}
+
+\newcommand{\cl}[1]{%
+  {\textcolor{codered}{\textbf{\texttt{\detokenize{#1}}}}}%
 }
 
 % code listings
@@ -65,6 +70,9 @@
 	\newpage
 	\input{urpc.tex}
 	%\newpage
-	%\input{shell.tex}	
+	\input{shell.tex}	
+
+  % Shell Commands Appendix
+  \input{shell_appendix.tex}
 	
 \end{document}
