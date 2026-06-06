@@ -1,5 +1,16 @@
 \relax 
 \providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
 \@writefile{toc}{\contentsline {chapter}{Core Operating System Overview}{3}{chapter*.2}\protected@file@percent }
@@ -22,30 +33,30 @@
 \@writefile{toc}{\contentsline {section}{Architecture Overview}{6}{section*.19}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{Page table representation}{6}{subsection*.20}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{Virtual address space tracking}{6}{subsection*.21}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{Map and unmap}{6}{subsection*.22}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Map and unmap}{7}{subsection*.22}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{Lazy Heap Allocation}{7}{subsection*.23}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{Page Fault Handler}{7}{subsection*.24}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{Slab Allocators}{7}{subsection*.25}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{Slot Allocator Refill}{8}{subsection*.26}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{Limitations and follow ups}{8}{subsection*.27}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Limitations and follow-ups}{8}{subsection*.27}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{Evaluation}{8}{section*.28}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{Base costs}{8}{subsection*.29}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Per operation cost of the four primitives. Log scale on the y axis; the four bars span roughly six orders of magnitude.}}{8}{figure.0.1}\protected@file@percent }
-\newlabel{fig:m2bench}{{1}{8}{Per operation cost of the four primitives. Log scale on the y axis; the four bars span roughly six orders of magnitude}{figure.0.1}{}}
-\@writefile{toc}{\contentsline {subsection}{Comparison to 1991 systems}{9}{subsection*.30}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Comparison to 1991 systems}{8}{subsection*.30}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Per operation cost of the four primitives. Log scale on the y axis; the four bars span roughly six orders of magnitude.}}{9}{figure.0.1}\protected@file@percent }
+\newlabel{fig:m2bench}{{1}{9}{Per operation cost of the four primitives. Log scale on the y axis; the four bars span roughly six orders of magnitude}{figure.0.1}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Page fault round trip on our system against the seven 1991 systems tabulated in Appel and Li's paper.}}{9}{figure.0.2}\protected@file@percent }
-\newlabel{fig,m2 appel li}{{2}{9}{Page fault round trip on our system against the seven 1991 systems tabulated in Appel and Li's paper}{figure.0.2}{}}
-\@writefile{toc}{\contentsline {subsection}{Allocation Strategies Across "Touch Ratios"}{9}{subsection*.31}\protected@file@percent }
+\newlabel{fig:m2_appel_li}{{2}{9}{Page fault round trip on our system against the seven 1991 systems tabulated in Appel and Li's paper}{figure.0.2}{}}
+\@writefile{toc}{\contentsline {subsection}{Allocation Strategies Across ``Touch Ratios''}{9}{subsection*.31}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Lazy versus eager as the touched fraction of the reservation grows. Reservation is 1000 pages throughout.}}{10}{figure.0.3}\protected@file@percent }
-\newlabel{fig,m2 lve sweep}{{3}{10}{Lazy versus eager as the touched fraction of the reservation grows. Reservation is 1000 pages throughout}{figure.0.3}{}}
+\newlabel{fig:m2_lve_sweep}{{3}{10}{Lazy versus eager as the touched fraction of the reservation grows. Reservation is 1000 pages throughout}{figure.0.3}{}}
 \@writefile{toc}{\contentsline {subsection}{Hybrid Strategy Under Random Access}{10}{subsection*.32}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Hybrid latency as the eager region grows from zero to the full reservation. Random touch pattern, 100 touches.}}{10}{figure.0.4}\protected@file@percent }
-\newlabel{fig,m2 hybrid}{{4}{10}{Hybrid latency as the eager region grows from zero to the full reservation. Random touch pattern, 100 touches}{figure.0.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Hybrid frames and latency for small eager regions, with a fixed 100 touch random workload over a 1000 page reservation.}}{11}{figure.0.5}\protected@file@percent }
-\newlabel{fig,m2 hybrid mix}{{5}{11}{Hybrid frames and latency for small eager regions, with a fixed 100 touch random workload over a 1000 page reservation}{figure.0.5}{}}
-\@writefile{toc}{\contentsline {subsection}{Frames Versus Time Tradeoff}{11}{subsection*.33}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Hybrid latency as the eager region grows from zero to the full reservation. Random touch pattern, 100 touches.}}{11}{figure.0.4}\protected@file@percent }
+\newlabel{fig:m2_hybrid}{{4}{11}{Hybrid latency as the eager region grows from zero to the full reservation. Random touch pattern, 100 touches}{figure.0.4}{}}
+\@writefile{toc}{\contentsline {subsection}{Frames Versus Time Trade-off}{11}{subsection*.33}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Hybrid frames and latency for small eager regions, with a fixed 100 touch random workload over a 1000 page reservation.}}{12}{figure.0.5}\protected@file@percent }
+\newlabel{fig:m2_hybrid_mix}{{5}{12}{Hybrid frames and latency for small eager regions, with a fixed 100 touch random workload over a 1000 page reservation}{figure.0.5}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Eager pays ten times the memory for near zero touch latency; lazy and hybrid land in the same lower band of memory but pay hundreds of milliseconds.}}{12}{figure.0.6}\protected@file@percent }
-\newlabel{fig,m2 mem}{{6}{12}{Eager pays ten times the memory for near zero touch latency; lazy and hybrid land in the same lower band of memory but pay hundreds of milliseconds}{figure.0.6}{}}
+\newlabel{fig:m2_mem}{{6}{12}{Eager pays ten times the memory for near zero touch latency; lazy and hybrid land in the same lower band of memory but pay hundreds of milliseconds}{figure.0.6}{}}
 \@writefile{toc}{\contentsline {chapter}{M4: Core-Local Message Passing (LMP)}{13}{chapter*.34}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{Architecture overview}{13}{section*.35}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Overall LMP subsystem architecture.}}{13}{figure.0.7}\protected@file@percent }

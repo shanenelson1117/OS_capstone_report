@@ -8,12 +8,12 @@
 
 We keep a software shadow tree of the hardware page tables so we can find any
 mapping by virtual address without re-walking the live tables. The data
-structure is struct \co{shadow\_pt} in \co{include/aos/paging\_types.h}, one node per
+structure is struct \co{shadow_pt} in \co{include/aos/paging_types.h}, one node per
 hardware L0/L1/L2/L3 table, carrying the capref of that vnode, the mapping
 cap that installed it into its parent, and a 512-entry children array
 indexed by the same PTE slot that the hardware would use. The L0 root
-is at \co{paging\_state.l0\_shadow} and is built in \co{paging\_init\_state}. Levels
-below it are created lazily by \co{ensure\_l3} the first time a mapping touches
+is at \co{paging_state.l0_shadow} and is built in \co{paging_init_state}. Levels
+below it are created lazily by \co{ensure_l3} the first time a mapping touches
 that subtree. We never pre-allocate a level we have not used.
 
 \medskip\noindent
@@ -31,18 +31,18 @@ structures.
 \subsection{Virtual address space tracking}
 
 The free and allocated VA regions live in a single sorted doubly linked list
-of struct \co{vregion}, rooted at \co{paging\_state.vregions}. Each
+of struct \co{vregion}, rooted at \co{paging_state.vregions}. Each
 node carries base, size, an allocated flag, and pointers to its neighbors.
-On init the list contains one big free region from \co{start\_vaddr} to
-\co{MAX\_VA\_ADDR}, which is 0x7f.
+On init the list contains one big free region from \co{start_vaddr} to
+\co{MAX_VA_ADDR}, which is 0x7f.
 
 \medskip\noindent
-\co{paging\_alloc} walks the list, picks the first free node large enough, splits
-off the wasted front for alignment using \co{vr\_split\_front} and splits off any
-excess at the back using \co{vr\_split\_back}, then marks the result allocated.
-\co{paging\_unmap} reverses the process. It clears the runs, marks the vregion free,
+\co{paging_alloc} walks the list, picks the first free node large enough, splits
+off the wasted front for alignment using \co{vr_split_front} and splits off any
+excess at the back using \co{vr_split_back}, then marks the result allocated.
+\co{paging_unmap} reverses the process. It clears the runs, marks the vregion free,
 then coalesces with the previous and next neighbors if they are also free.
-\co{vr\_coalesce} is the only place that drops nodes back to the slab. The list
+\co{vr_coalesce} is the only place that drops nodes back to the slab. The list
 is kept sorted by base address as an invariant of the splits, which is what
 lets us walk it forwards and find any address in O(N).
 
@@ -54,22 +54,22 @@ thousands we would switch to a red-black tree without changing any caller.
 
 \subsection{Map and unmap}
 
-\co{paging\_map\_frame\_attr\_offset} is the workhorse. It ensures the helper slabs
-have room, possibly triggers a root cnode refill, calls \co{paging\_alloc} to
-reserve VA, then calls \co{do\_map} to install the PTEs.
+\co{paging_map_frame_attr_offset} is the workhorse. It ensures the helper slabs
+have room, possibly triggers a root cnode refill, calls \co{paging_alloc} to
+reserve VA, then calls \co{do_map} to install the PTEs.
 
 \medskip\noindent
-\co{do\_map} chunks the requested region at L3 boundaries and
-issues one \co{vnode\_map} per chunk. For each chunk it records a \co{vregion\_run}
+\co{do_map} chunks the requested region at L3 boundaries and
+issues one \co{vnode_map} per chunk. For each chunk it records a \co{vregion_run}
 holding the L3 shadow node, the starting slot, the page count, and the
 mapping cap. The runs form a per-vregion list rooted at \co{vregion.runs}.
 Recording the chunks instead of synthesizing them later is what makes
-\co{paging\_unmap} simple. It walks \co{vregion.runs}, calls \co{vnode\_unmap} plus
-\co{cap\_destroy} per run, frees the run nodes back to the slab, and is done.
+\co{paging_unmap} simple. It walks \co{vregion.runs}, calls \co{vnode_unmap} plus
+\co{cap_destroy} per run, frees the run nodes back to the slab, and is done.
 The unmap path never re-walks the shadow tree.
 
 \medskip\noindent
-\co{paging\_map\_fixed\_attr\_offset} shares \co{do\_map} and the run tracking. It
+\co{paging_map_fixed_attr_offset} shares \co{do_map} and the run tracking. It
 adds a containment check, finding the unique free vregion that fully contains
 \co{[vaddr, vaddr+bytes)}, rejecting the request if the range overlaps any allocated
 region, and otherwise carving and installing. This is the path that V02 and V05
@@ -77,9 +77,9 @@ stress with their overlap-rejection requirements.
 
 \subsection{Lazy Heap Allocation}
 
-\co{morecore\_alloc} only reserves virtual address space; it never touches a
-physical frame. \co{lib/aos/morecore.c} calls \co{paging\_alloc} with the requested
-size and returns the base address. The cost of a malloc is O(1)
+\co{morecore_alloc} only reserves virtual address space; it never touches a
+physical frame. The implementation in \co{lib/aos/morecore.c}
+calls \co{paging_alloc} with the requested size and returns the base address. The cost of a malloc is O(1)
 in the number of pages, independent of how big the allocation is. The book
 suggested implementing eager mapping first and switching to lazy later. We
 implemented lazy from the start because the work to back up an unmapped
@@ -87,8 +87,8 @@ heap with a page fault handler was already required for the grading tests,
 and bolting eager mapping on top would have been throwaway code.
 
 \medskip\noindent
-\co{morecore\_free} walks the vregion list to find the region that contains the
-freed pointer, then calls \co{paging\_unmap} on its base address. This means the
+\co{morecore_free} walks the vregion list to find the region that contains the
+freed pointer, then calls \co{paging_unmap} on its base address. This means the
 full VA region returns to the free pool in one shot, which is fine because
 malloc and free always pair on the same vregion base address.
 
@@ -99,49 +99,50 @@ property that MB3 in our benchmark relies on.
 
 \subsection{Page Fault Handler}
 
-\co{pagefault\_handler} in \co{lib/aos/paging.c} is registered once for the main
-thread in \co{set\_main\_handler} and once per additional thread in
-\co{paging\_init\_onthread}. The handler is small on purpose. It rejects any
-fault at an address below \co{NULL\_GUARD\_ADDR} = 32 MiB as a null dereference,
+\co{pagefault_handler} in \co{lib/aos/paging.c} is registered via
+\co{set_main_handler} for the main thread and via \co{paging_init_onthread}
+for each additional thread. The handler is small on purpose. It rejects any
+fault at an address below \co{NULL_GUARD_ADDR} = 32 MiB as a null dereference,
 walks the vregion list to find the allocated region that owns the faulting
-page, makes sure the helper slabs have room, allocates one \co{BASE\_PAGE\_SIZE}
-frame, builds the L3 shadow node via \co{ensure\_l3} if it does not exist yet,
-and installs exactly one PTE through \co{vnode\_map}. The new run is pushed onto
-the \co{vregion.runs} list so \co{paging\_unmap} can find it later.
+page, makes sure the helper slabs have room, allocates one \co{BASE_PAGE_SIZE}
+frame, builds the L3 shadow node via \co{ensure_l3} if it does not exist yet,
+and installs exactly one PTE through \co{vnode_map}. The new run is pushed onto
+the \co{vregion.runs} list so \co{paging_unmap} can find it later.
 
 \medskip\noindent
-There are two non-obvious decisions in the handler. First, we do not go
-through \co{paging\_map\_fixed\_attr\_offset} even though it looks like the right
-abstraction, because that path rejects already allocated vregions and would
-loop the fault forever. We install the PTE directly. Second, all three
-\co{ensure\_X\_slab} calls run before \co{frame\_alloc}, so the handler never
-recurses into itself by faulting on a slab refill while servicing a fault.
+Two non-obvious decisions shape the handler. First, the PTE is installed
+directly rather than through the standard map path:
+\co{paging_map_fixed_attr_offset} rejects already-allocated vregions, which
+would cause the fault to loop forever. Second, all three \co{ensure_X_slab}
+calls run before \co{frame_alloc} so the handler never recurses into itself
+by faulting during a slab refill.
 
 \subsection{Slab Allocators}
 
-We carry three slabs in struct \co{paging\_state} --- \co{pt\_slab} for \co{shadow\_pt}
-nodes, \co{vr\_slab} for \co{vregion} nodes, and \co{run\_slab} for \co{vregion\_run} nodes.
-Each is sized differently because \co{shadow\_pt} is roughly 4 KiB while \co{vregion}
-and \co{vregion\_run} are small. The initial paging state is seeded from three
+We carry three slabs in struct \co{paging_state} --- \co{pt_slab} for \co{shadow_pt}
+nodes, \co{vr_slab} for \co{vregion} nodes, and \co{run_slab} for \co{vregion_run} nodes.
+Each is sized differently because \co{shadow_pt} is roughly 4 KiB while \co{vregion}
+and \co{vregion_run} are small. The initial paging state is seeded from three
 file-static buffers, so the very first allocations never have to go through the
 slab refill path that itself needs paging.
 
 \medskip\noindent
-Once those static buffers are warm, the slabs grow on demand through
-\co{ensure\_vr\_slab}, \co{ensure\_run\_slab}, \co{ensure\_pt\_slab}. Each calls
-\co{slab\_refill\_no\_pagefault}, which allocates a frame and maps it through
-\co{paging\_map\_frame\_attr}. The three \co{ensure\_X\_slab} functions share a
+Once those static buffers are warm, the slabs grow on demand through dedicated
+refill functions: \co{ensure_vr_slab}, \co{ensure_run_slab}, and
+\co{ensure_pt_slab}. Each calls
+\co{slab_refill_no_pagefault}, which allocates a frame and maps it through
+\co{paging_map_frame_attr}. The three \co{ensure_X_slab} functions share a
 re-entrancy guard pattern: any one of them being mid-refill blocks the others
-from refilling too. This is required because \co{slab\_refill\_no\_pagefault}
-calls back into \co{paging\_map\_frame\_attr\_offset}, which would otherwise drive
+from refilling too. This is required because \co{slab_refill_no_pagefault}
+calls back into \co{paging_map_frame_attr_offset}, which would otherwise drive
 each of the other two slabs to refill recursively before the outer one finishes.
 
 \subsection{Slot Allocator Refill}
 
-\co{paging\_map\_frame\_attr\_offset} and \co{paging\_map\_fixed\_attr\_offset} both
+\co{paging_map_frame_attr_offset} and \co{paging_map_fixed_attr_offset} both
 peek at the single slot allocator state before they reserve a vregion. If
 the root cnode is down to twelve free slots, the map path triggers a manual
-\co{root\_slot\_allocator\_refill} guarded by the state \co{rootca.refilling}
+\co{root_slot_allocator_refill} guarded by the state \co{rootca.refilling}
 so the refill path does not re-enter itself. The threshold of twelve was
 picked empirically. A single map request can chew through several slots, so
 we want headroom before the slot allocator itself starts demanding new slots
@@ -154,8 +155,8 @@ linear time fault handler lookup. Under heavy fragmentation this becomes
 the bottleneck; a balanced tree would fix it without changing callers.
 
 \medskip\noindent
-Superpages are not implemented. \co{do\_map} only emits \co{BASE\_PAGE\_SIZE} PTEs, so
-the flag is silently dropped. Hooking 2 MiB block PTE installation into \co{do\_map}
+Superpages are not implemented. \co{do_map} only emits \co{BASE_PAGE_SIZE} PTEs, so
+the flag is silently dropped. Hooking 2 MiB block PTE installation into \co{do_map}
 is the next planned extension and would also enable the MB5 superpage comparison
 in our benchmark plan.
 

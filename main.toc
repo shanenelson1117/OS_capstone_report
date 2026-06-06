@@ -18,18 +18,18 @@
 \contentsline {section}{Architecture Overview}{6}{section*.19}%
 \contentsline {subsection}{Page table representation}{6}{subsection*.20}%
 \contentsline {subsection}{Virtual address space tracking}{6}{subsection*.21}%
-\contentsline {subsection}{Map and unmap}{6}{subsection*.22}%
+\contentsline {subsection}{Map and unmap}{7}{subsection*.22}%
 \contentsline {subsection}{Lazy Heap Allocation}{7}{subsection*.23}%
 \contentsline {subsection}{Page Fault Handler}{7}{subsection*.24}%
 \contentsline {subsection}{Slab Allocators}{7}{subsection*.25}%
 \contentsline {subsection}{Slot Allocator Refill}{8}{subsection*.26}%
-\contentsline {subsection}{Limitations and follow ups}{8}{subsection*.27}%
+\contentsline {subsection}{Limitations and follow-ups}{8}{subsection*.27}%
 \contentsline {section}{Evaluation}{8}{section*.28}%
 \contentsline {subsection}{Base costs}{8}{subsection*.29}%
-\contentsline {subsection}{Comparison to 1991 systems}{9}{subsection*.30}%
-\contentsline {subsection}{Allocation Strategies Across "Touch Ratios"}{9}{subsection*.31}%
+\contentsline {subsection}{Comparison to 1991 systems}{8}{subsection*.30}%
+\contentsline {subsection}{Allocation Strategies Across ``Touch Ratios''}{9}{subsection*.31}%
 \contentsline {subsection}{Hybrid Strategy Under Random Access}{10}{subsection*.32}%
-\contentsline {subsection}{Frames Versus Time Tradeoff}{11}{subsection*.33}%
+\contentsline {subsection}{Frames Versus Time Trade-off}{11}{subsection*.33}%
 \contentsline {chapter}{M4: Core-Local Message Passing (LMP)}{13}{chapter*.34}%
 \contentsline {section}{Architecture overview}{13}{section*.35}%
 \contentsline {subsection}{Client-side}{13}{subsection*.36}%
