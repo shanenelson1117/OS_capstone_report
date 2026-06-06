@@ -1,10 +1,13 @@
+\chapter*{M1: Memory Allocator}{\textbf{Author: Chenyi Wang}
+\newline 
+ \newline 
+ The goal of this milestone is to enable user level processes to manage their virtual address spaces.}
+\addcontentsline{toc}{chapter}{M1: Memory Allocator}
 \section{M1: Memory Allocator}
-
 \subsection{Server placement}
 
 We implemented the memory server inside the init domain rather than a separate
-process (the simple way described in section 6.12 of the book). The init
-domain owns the only mm instance, aos\_mm, defined as a file-static variable
+process. The init domain owns the only mm instance, aos\_mm, defined as a file static variable
 in usr/init/mem\_alloc.c. Every other domain requests RAM by sending an
 AOS\_RPC\_MSG\_RAM\_REQ over its LMP channel to init. The handler
 handle\_ram\_req in usr/init/rpc\_server.c calls aos\_ram\_alloc\_aligned, which
@@ -26,20 +29,20 @@ before it returns, and the capability machinery prevents the same physical
 memory from being retyped to RAM twice. Disjointness is a structural property
 of the design; the handler does not need to check it.
 
-\subsection{Per-client quota}
+\subsection{Per client quota}
 
 To stop one misbehaving client from grabbing all of physical memory, every
 client\_state carries a bytes\_allocated counter. The handler increments it
 after each successful allocation. A request is rejected with
 LIB\_ERR\_RAM\_ALLOC when bytes\_allocated + bytes would exceed the quota,
-currently 256 MiB. The quota is hard-coded in handle\_ram\_req but easy to
+currently 256 MiB. The quota is hard coded in handle\_ram\_req but easy to
 move to a configurable constant later.
 
 Two caveats. First, the counter only tracks allocations, not frees. Once we
 add an explicit free RPC, the counter has to be decremented. Second, the
 counter is not yet protected by a mutex. All handlers currently run on init's
 single dispatcher thread, so there is no race in practice, but this assumption
-breaks the moment a second worker thread is added. Locking is on our follow-up
+breaks the moment a second worker thread is added. Locking is on our follow up
 list.
 
 \subsection{Alignment}
@@ -51,7 +54,7 @@ achievable.
 
 \subsection{Error handling}
 
-A failure reply carries cap = NULL\_CAP, actual\_bytes = 0, and an errval\_t
+A failure reply carries cap is NULL\_CAP, actual\_bytes is 0, and an errval\_t
 in words[2]. The client side aos\_rpc\_get\_ram\_cap reads words[2] as the
 error code and returns immediately on failure, so the caller never sees a
 partially filled capref.
@@ -59,19 +62,19 @@ partially filled capref.
 \subsection{Switching children to the remote allocator}
 
 Once a child establishes its RPC channel to init inside
-barrelfish\_init\_onthread (lib/aos/init.c), we call ram\_alloc\_set(NULL).
+barrelfish\_init\_onthread, we call ram\_alloc\_set(NULL).
 Per the book this clears the local allocator function pointer. After that,
 ram\_alloc\_aligned falls through ram\_alloc\_fixed and into
-ram\_alloc\_remote once the early-boot RAM buffer is exhausted, and
+ram\_alloc\_remote once the early boot RAM buffer is exhausted, and
 ram\_alloc\_remote calls aos\_rpc\_get\_ram\_cap. The effect is that
 frame\_alloc and malloc transparently route through the memory server. The
 init domain returns early from barrelfish\_init\_onthread via the
 if (init\_domain) return guard, so init itself never executes
-ram\_alloc\_set(NULL), and there is no risk of init RPC-ing itself.
+ram\_alloc\_set(NULL), and there is no risk of init RPC ing itself.
 
 \subsection{Limitations}
 
-We have not implemented a per-client free path yet, so caps returned to a
+We have not implemented a per client free path yet, so caps returned to a
 client stay accounted against its quota for the lifetime of the system.
 There is no locking on aos\_mm or on the client list. The 256 MiB quota is
 not tuned for the actual physical memory size of the target board; on a
