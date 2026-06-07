@@ -222,6 +222,9 @@ INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/jknappen/ec/ecbx1200.tfm
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
 INPUT /usr/local/texlive/2026/texmf-dist/fonts/tfm/jknappen/ec/ectt1200.tfm
+INPUT ./memory-allocation.tex
+INPUT ./memory-allocation.tex
+INPUT memory-allocation.tex
 INPUT ./self-paging.tex
 INPUT ./self-paging.tex
 INPUT self-paging.tex

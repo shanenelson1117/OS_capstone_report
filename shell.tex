@@ -5,13 +5,20 @@
 \section{Command processing}
 
 \subsection{Background tasks}
-TODO: without the \& call join on the spawned process(es), else just let the 
-process go 
+TODO: 
+Have one main thread which periodically just spins in an event dispatch on a timer
+(or another method) and checks serial in (which should be buffered to lines).
+\\ 
+If the command is a spawn and there is no \& make the main thread wait on the process(es)
 \\
+If there is an \& then create a new thread and have it wait on the process,
+as an argument give it a number (n) and binary name. Have it print out [n] pid,
+then wait on the process (the main thread should synchronize to not grab new input 
+until this happens, we can use semaphores). then when it is done print [n] done and the command.
+it may also make sense to write the output to a temp file that way we can print it all at once
+when the process is done before we print done.
 \\
-for background tasks we might want to replicate bash behavior where it sends the process output
-with like [n]: ... if you know what I mean. If we do this then we need to redirect the output of the 
-background task to a file that we have prepended with this, then cat the file. We should have a call about this
+this replicates bash behavior
 
 \section{RamFS file system support}
 We route all RamFS file operations through the \co{init} process. Each core has its own
