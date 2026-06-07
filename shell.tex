@@ -5,13 +5,20 @@
 \section{Command processing}
 
 \subsection{Background tasks}
-TODO: without the \& call join on the spawned process(es), else just let the 
-process go 
+TODO: 
+Have one main thread which periodically just spins in an event dispatch on a timer
+(or another method) and checks serial in (which should be buffered to lines).
+\\ 
+If the command is a spawn and there is no \& make the main thread wait on the process(es)
 \\
+If there is an \& then create a new thread and have it wait on the process,
+as an argument give it a number (n) and binary name. Have it print out [n] pid,
+then wait on the process (the main thread should synchronize to not grab new input 
+until this happens, we can use semaphores). then when it is done print [n] done and the command.
+it may also make sense to write the output to a temp file that way we can print it all at once
+when the process is done before we print done.
 \\
-for background tasks we might want to replicate bash behavior where it sends the process output
-with like [n]: ... if you know what I mean. If we do this then we need to redirect the output of the 
-background task to a file that we have prepended with this, then cat the file. We should have a call about this
+this replicates bash behavior
 
 \section{RamFS file system support}
 We route all RamFS file operations through the \co{init} process. Each core has its own
@@ -52,7 +59,7 @@ errval_t aos_rpc_fs_readdir(struct aos_rpc *chan, fs_fhandle_t handle,
 \end{lstlisting}
 The corresponding handlers are added to \co{rpc_server.c} and message tags to \co{aos_rpc.h}. The shell (or user process) can specify 
 specify the flags which they want the file to be opened with, and can embedd the core which they
-prefer to create the file on by passing \co{FS_OPEN_ON_CORE(core) | FS_OPEN_CREATE} to \co{aos_rpc_fs_open()} as teh \co{flags} argument. This is intended to mirror
+prefer to create the file on by passing \co{FS_OPEN_ON_CORE(core) | FS_OPEN_CREATE} to \co{aos_rpc_fs_open()} as the \co{flags} argument. This is intended to mirror
 the spawn procedure of allowing a user to specify the core to spawn the procedure on. This works in the same way a 
 shell spawn works (\cl{$ run process ---core n}), via the \cl{---core} command line argument like so,
 \cl{$ touch file-name ---core n}. Any process can access files on any core, this is implemented with UMP redirection. To facilitate
@@ -76,7 +83,7 @@ in the following manner:
   \item The shell then creates an \co{io_config_frame} for each side of the pipe and
   spawns the processes:
   \begin{lstlisting}
-  // For the writer only (reader just sets pipe_in true and pipe_out_is_dsp 0)
+  // This omits the reader setup but it is nearly identical (the reader just sets pipe_in true and pipe_out_is_dsp 0)
   struct io_config_frame cfg = {
     .pipe_out        = true,
     .pipe_out_is_bsp = 1,
