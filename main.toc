@@ -2,84 +2,84 @@
 \contentsline {section}{Introduction}{3}{section*.3}%
 \contentsline {section}{Microkernel and Capabilities}{3}{section*.4}%
 \contentsline {subsection}{Minimal Trusted Core}{3}{subsection*.5}%
-\contentsline {subsection}{Capabilities}{3}{subsection*.6}%
+\contentsline {subsection}{Capabilities}{4}{subsection*.6}%
 \contentsline {section}{User-Space System Structure}{4}{section*.7}%
 \contentsline {subsection}{The {\textcolor {codeblue}{\textbf {\texttt {init}}}} Process}{4}{subsection*.8}%
 \contentsline {subsection}{Child Processes}{4}{subsection*.9}%
-\contentsline {section}{Memory Management}{4}{section*.10}%
-\contentsline {subsection}{Physical Memory}{4}{subsection*.11}%
-\contentsline {subsection}{Virtual Memory}{4}{subsection*.12}%
+\contentsline {section}{Memory Management}{5}{section*.10}%
+\contentsline {subsection}{Physical Memory}{5}{subsection*.11}%
+\contentsline {subsection}{Virtual Memory}{5}{subsection*.12}%
 \contentsline {section}{Inter-Process Communication}{5}{section*.13}%
 \contentsline {subsection}{Local Message Passing (LMP) --- Intra-Core}{5}{subsection*.14}%
 \contentsline {subsection}{User Message Passing (UMP) --- Inter-Core}{5}{subsection*.15}%
 \contentsline {section}{The RPC Protocol}{5}{section*.16}%
-\contentsline {section}{Multi-Core}{5}{section*.17}%
-\contentsline {chapter}{M1: Memory Allocator}{6}{chapter*.18}%
-\contentsline {section}{M1: Memory Allocator}{6}{section*.19}%
-\contentsline {subsection}{Server placement}{6}{subsection*.20}%
-\contentsline {subsection}{Disjoint allocations}{6}{subsection*.21}%
-\contentsline {subsection}{Per client quota}{6}{subsection*.22}%
-\contentsline {subsection}{Alignment}{6}{subsection*.23}%
-\contentsline {subsection}{Error handling}{7}{subsection*.24}%
-\contentsline {subsection}{Switching children to the remote allocator}{7}{subsection*.25}%
-\contentsline {subsection}{Limitations}{7}{subsection*.26}%
-\contentsline {chapter}{M2: Virtual Memory}{8}{chapter*.27}%
-\contentsline {section}{Architecture Overview}{8}{section*.28}%
-\contentsline {subsection}{Page table representation}{8}{subsection*.29}%
-\contentsline {subsection}{Virtual address space tracking}{8}{subsection*.30}%
-\contentsline {subsection}{Map and unmap}{9}{subsection*.31}%
-\contentsline {subsection}{Lazy Heap Allocation}{9}{subsection*.32}%
-\contentsline {subsection}{Page Fault Handler}{9}{subsection*.33}%
-\contentsline {subsection}{Slab Allocators}{9}{subsection*.34}%
-\contentsline {subsection}{Slot Allocator Refill}{10}{subsection*.35}%
-\contentsline {subsection}{Limitations and follow-ups}{10}{subsection*.36}%
-\contentsline {section}{Evaluation}{10}{section*.37}%
-\contentsline {subsection}{Base costs}{10}{subsection*.38}%
-\contentsline {subsection}{Comparison to 1991 systems}{10}{subsection*.39}%
-\contentsline {subsection}{Allocation Strategies Across ``Touch Ratios''}{11}{subsection*.40}%
-\contentsline {subsection}{Hybrid Strategy Under Random Access}{12}{subsection*.41}%
-\contentsline {subsection}{Frames Versus Time Trade-off}{13}{subsection*.42}%
-\contentsline {chapter}{M4: Core-Local Message Passing (LMP)}{15}{chapter*.43}%
-\contentsline {section}{Architecture overview}{15}{section*.44}%
-\contentsline {subsection}{Client-side}{15}{subsection*.45}%
-\contentsline {subsubsection}{Thread-Local state}{16}{subsubsection*.46}%
-\contentsline {subsubsection}{Channel initialization}{16}{subsubsection*.47}%
-\contentsline {subsubsection}{Synchronous send and receive}{16}{subsubsection*.48}%
-\contentsline {subsection}{Server-side}{16}{subsection*.49}%
-\contentsline {subsubsection}{Handshake protocol}{16}{subsubsection*.50}%
-\contentsline {subsubsection}{General purpose serving}{16}{subsubsection*.51}%
-\contentsline {subsubsection}{Special case: {\textcolor {codeblue}{\textbf {\texttt {aos_rpc_proc_wait()}}}}}{17}{subsubsection*.52}%
-\contentsline {subsection}{Shared memory for large messages}{17}{subsection*.53}%
-\contentsline {section}{Optimizations and performance evaluation}{17}{section*.54}%
-\contentsline {subsection}{Performance Goals and Optimizations}{17}{subsection*.55}%
-\contentsline {subsubsection}{1. Latency Reduction for Multithreaded LMP}{17}{subsubsection*.56}%
-\contentsline {subsubsection}{2. Memory Usage Reduction of Large Message Infrastructure}{17}{subsubsection*.57}%
-\contentsline {subsection}{Performance evaluation}{18}{subsection*.58}%
-\contentsline {subsubsection}{Microbenchmarks}{18}{subsubsection*.59}%
-\contentsline {subsubsection}{Results}{18}{subsubsection*.60}%
-\contentsline {section}{Development process}{20}{section*.61}%
-\contentsline {chapter}{M5: Multicore}{21}{chapter*.62}%
-\contentsline {section}{Architecture Overview}{21}{section*.63}%
-\contentsline {subsection}{Initial URPC Frame}{21}{subsection*.64}%
-\contentsline {subsection}{Booting Another Core}{22}{subsection*.65}%
-\contentsline {subsection}{Multicore Memory Management}{22}{subsection*.66}%
-\contentsline {subsection}{Suspend, Resume, Shutdown, and Reboot}{23}{subsection*.67}%
-\contentsline {section}{Development Process}{23}{section*.68}%
-\contentsline {chapter}{M6: User-Level Message Passing (UMP)}{24}{chapter*.69}%
-\contentsline {section}{Architecture overview}{24}{section*.70}%
-\contentsline {subsection}{Initializing UMP channels}{24}{subsection*.71}%
-\contentsline {subsection}{Memory layout of UMP channel}{25}{subsection*.72}%
-\contentsline {subsection}{Handling incoming messages}{25}{subsection*.73}%
-\contentsline {subsection}{Requestor}{26}{subsection*.74}%
-\contentsline {subsubsection}{Facilitating global operations}{26}{subsubsection*.75}%
-\contentsline {subsection}{Receiver}{27}{subsection*.76}%
-\contentsline {subsection}{Concurrent UMP operations}{27}{subsection*.77}%
-\contentsline {section}{Development process}{28}{section*.78}%
-\contentsline {chapter}{M7: Shell}{29}{chapter*.79}%
-\contentsline {section}{Command processing}{29}{section*.80}%
-\contentsline {subsection}{Background tasks}{29}{subsection*.81}%
-\contentsline {section}{RamFS file system support}{29}{section*.82}%
-\contentsline {section}{Pipes and I/O redirection}{30}{section*.83}%
-\contentsline {section}{Synchronizing serial input \& output}{31}{section*.84}%
-\contentsline {section}{Development process}{31}{section*.85}%
-\contentsline {chapter}{Appendix A: Shell Commands}{32}{chapter*.86}%
+\contentsline {section}{Multi-Core}{6}{section*.17}%
+\contentsline {chapter}{M1: Memory Allocator}{7}{chapter*.18}%
+\contentsline {section}{M1: Memory Allocator}{7}{section*.19}%
+\contentsline {subsection}{Server placement}{7}{subsection*.20}%
+\contentsline {subsection}{Disjoint allocations}{7}{subsection*.21}%
+\contentsline {subsection}{Per client quota}{7}{subsection*.22}%
+\contentsline {subsection}{Alignment}{7}{subsection*.23}%
+\contentsline {subsection}{Error handling}{8}{subsection*.24}%
+\contentsline {subsection}{Switching children to the remote allocator}{8}{subsection*.25}%
+\contentsline {subsection}{Limitations}{8}{subsection*.26}%
+\contentsline {chapter}{M2: Virtual Memory}{9}{chapter*.27}%
+\contentsline {section}{Architecture Overview}{9}{section*.28}%
+\contentsline {subsection}{Page table representation}{9}{subsection*.29}%
+\contentsline {subsection}{Virtual address space tracking}{9}{subsection*.30}%
+\contentsline {subsection}{Map and unmap}{10}{subsection*.31}%
+\contentsline {subsection}{Lazy Heap Allocation}{10}{subsection*.32}%
+\contentsline {subsection}{Page Fault Handler}{10}{subsection*.33}%
+\contentsline {subsection}{Slab Allocators}{10}{subsection*.34}%
+\contentsline {subsection}{Slot Allocator Refill}{11}{subsection*.35}%
+\contentsline {subsection}{Limitations and follow-ups}{11}{subsection*.36}%
+\contentsline {section}{Evaluation}{11}{section*.37}%
+\contentsline {subsection}{Base costs}{11}{subsection*.38}%
+\contentsline {subsection}{Comparison to 1991 systems}{11}{subsection*.39}%
+\contentsline {subsection}{Allocation Strategies Across ``Touch Ratios''}{12}{subsection*.40}%
+\contentsline {subsection}{Hybrid Strategy Under Random Access}{13}{subsection*.41}%
+\contentsline {subsection}{Frames Versus Time Trade-off}{14}{subsection*.42}%
+\contentsline {chapter}{M4: Core-Local Message Passing (LMP)}{16}{chapter*.43}%
+\contentsline {section}{Architecture overview}{16}{section*.44}%
+\contentsline {subsection}{Client-side}{16}{subsection*.45}%
+\contentsline {subsubsection}{Thread-Local state}{17}{subsubsection*.46}%
+\contentsline {subsubsection}{Channel initialization}{17}{subsubsection*.47}%
+\contentsline {subsubsection}{Synchronous send and receive}{17}{subsubsection*.48}%
+\contentsline {subsection}{Server-side}{17}{subsection*.49}%
+\contentsline {subsubsection}{Handshake protocol}{17}{subsubsection*.50}%
+\contentsline {subsubsection}{General purpose serving}{17}{subsubsection*.51}%
+\contentsline {subsubsection}{Special case: {\textcolor {codeblue}{\textbf {\texttt {aos_rpc_proc_wait()}}}}}{18}{subsubsection*.52}%
+\contentsline {subsection}{Shared memory for large messages}{18}{subsection*.53}%
+\contentsline {section}{Optimizations and performance evaluation}{18}{section*.54}%
+\contentsline {subsection}{Performance Goals and Optimizations}{18}{subsection*.55}%
+\contentsline {subsubsection}{1. Latency Reduction for Multithreaded LMP}{18}{subsubsection*.56}%
+\contentsline {subsubsection}{2. Memory Usage Reduction of Large Message Infrastructure}{18}{subsubsection*.57}%
+\contentsline {subsection}{Performance evaluation}{19}{subsection*.58}%
+\contentsline {subsubsection}{Microbenchmarks}{19}{subsubsection*.59}%
+\contentsline {subsubsection}{Results}{19}{subsubsection*.60}%
+\contentsline {section}{Development process}{21}{section*.61}%
+\contentsline {chapter}{M5: Multicore}{22}{chapter*.62}%
+\contentsline {section}{Architecture Overview}{22}{section*.63}%
+\contentsline {subsection}{Initial URPC Frame}{22}{subsection*.64}%
+\contentsline {subsection}{Booting Another Core}{23}{subsection*.65}%
+\contentsline {subsection}{Multicore Memory Management}{23}{subsection*.66}%
+\contentsline {subsection}{Suspend, Resume, Shutdown, and Reboot}{24}{subsection*.67}%
+\contentsline {section}{Development Process}{24}{section*.68}%
+\contentsline {chapter}{M6: User-Level Message Passing (UMP)}{25}{chapter*.69}%
+\contentsline {section}{Architecture overview}{25}{section*.70}%
+\contentsline {subsection}{Initializing UMP channels}{25}{subsection*.71}%
+\contentsline {subsection}{Memory layout of UMP channel}{26}{subsection*.72}%
+\contentsline {subsection}{Handling incoming messages}{26}{subsection*.73}%
+\contentsline {subsection}{Requestor}{27}{subsection*.74}%
+\contentsline {subsubsection}{Facilitating global operations}{27}{subsubsection*.75}%
+\contentsline {subsection}{Receiver}{28}{subsection*.76}%
+\contentsline {subsection}{Concurrent UMP operations}{28}{subsection*.77}%
+\contentsline {section}{Development process}{29}{section*.78}%
+\contentsline {chapter}{M7: Shell}{30}{chapter*.79}%
+\contentsline {section}{Command processing}{30}{section*.80}%
+\contentsline {subsection}{Background tasks}{30}{subsection*.81}%
+\contentsline {section}{RamFS file system support}{30}{section*.82}%
+\contentsline {section}{Pipes and I/O redirection}{31}{section*.83}%
+\contentsline {section}{Synchronizing serial input \& output}{32}{section*.84}%
+\contentsline {section}{Development process}{32}{section*.85}%
+\contentsline {chapter}{Appendix A: Shell Commands}{33}{chapter*.86}%
