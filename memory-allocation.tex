@@ -3,7 +3,7 @@
  \newline
  The goal of this milestone is to enable user-level processes to manage their virtual address spaces.}
 \addcontentsline{toc}{chapter}{M1: Memory Allocator}
-\section{M1: Memory Allocator}
+\section{Architecture Overview}
 \subsection{Server Placement}
 
 We implemented the memory server inside the init domain rather than a separate
@@ -40,12 +40,8 @@ exceed the quota, currently 256 MiB. The quota is hard-coded in
 \co{handle_ram_req} but easy to move to a configurable constant later.
 
 \medskip\noindent
-Two caveats. First, the counter only tracks allocations, not frees. Once we
-add an explicit free RPC, the counter has to be decremented. Second, the
-counter is not yet protected by a mutex. All handlers currently run on init's
-single dispatcher thread, so there is no race in practice, but this assumption
-breaks the moment a second worker thread is added. Locking is on our follow-up
-list.
+One important caveat is that the counter only tracks allocations, not frees. Once we
+add an explicit free RPC, the counter has to be decremented.
 
 \subsection{Alignment}
 
@@ -77,7 +73,7 @@ and there is no risk of it calling its own RPC server.
 
 We have not implemented a per-client free path yet, so caps returned to a
 client stay accounted against its quota for the lifetime of the system.
-There is no locking on \co{aos_mm} or on the client list. The 256 MiB quota is
+The 256 MiB quota is
 not tuned for the actual physical memory size of the target board; on a
 1~GiB iMX8X system this allows at most four clients before quota errors
 kick in.
@@ -90,7 +86,7 @@ range allocations. For mapping frame capabilities through a linear allocator, Sa
 main paging code which enabled this feature. At this point, we did misunderstand
 some of the specification, as we thought we only required one L3 page table for 
 this milestone.  Shane then finished up the pre-testing code for the milestone by implementing the 
-slab allocator refill code
+slab allocator refill code.
 
 \medskip\noindent
 In terms of debugging most of the fault was with the paging code as we were under the impression

@@ -75,8 +75,9 @@ When a message is fully constructed, it is "dispatched", the actual behavior of 
 on if the domain is the original requestor (i.e. write end) or the receiver (i.e. read end) for the message.
 
 \subsection{Handling incoming messages} 
-TODO: talk about deffered timer and how it woeks a bit, then jump into this. \\
-When the timer set on init fires, execution is started in the timer handler function. The timer handler function, \co{ump_poll_handler()}, loops through all UMP channels and processes any messages which may have
+On initialization of the UMP channel, a timer is set. This timer is deferred meaning that if \co{init} is spinning in the 
+event dispatch loop (see \co{init/main.c}) the timer will fire, otherwise the timer is buffered and handled when init is not doing work.
+When the timer fires, execution is started in the timer handler function. The timer handler function, \co{ump_poll_handler()}, loops through all UMP channels and processes any messages which may have
  been received. Based on the message type, the handler does the following:
  \begin{description}
     \item \textbf{Request Header:}

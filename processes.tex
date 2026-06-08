@@ -76,6 +76,17 @@ The dispatcher is initialized in the disabled state with the process name and PI
 set, so the kernel's scheduler can identify it from the moment it is made
 runnable.
 
+\section{Process Management}
+The process management library (\co{init/proc_mgmt.c}) is used to keep track of the state of spawned
+processes on a core. To facilitate this, we keep a linked list process table which holds every process
+spawned. Currently this table is not garbage collected upon process exit (because resource clean up broadly
+is not implemented for the \co{spawn}/\co{proc_mgmt} libraries). This table allows us to implement functionality
+such as \cl{$ ps} as well as process lookup by name. \co{proc_mgmt} acts as a small wrapper around
+the \co{spawn} library which dispatches to the correct function while maintaining the process table. As discussed above,
+the \co{spawn} library enables spawning processes but it also controls process lifetimes. Functionality such
+as making a process runnable, suspending a process, terminating a process, and waiting on a process is implemented in \co{spawn.c}. The \co{proc_mgmt}
+library is the wrapper and entry point for this functionality, invoked via RPC.
+
 \section{Development Process}
 
 
