@@ -785,6 +785,10 @@ INPUT ./fig/m2_mem.png
 INPUT fig/m2_mem.png
 INPUT ./fig/m2_mem.png
 INPUT ./fig/m2_mem.png
+INPUT ./processes.tex
+INPUT processes.tex
+INPUT ./processes.tex
+INPUT processes.tex
 INPUT ./rpc.tex
 INPUT rpc.tex
 INPUT ./rpc.tex

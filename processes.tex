@@ -1,3 +1,81 @@
-\section{Processes}
+\chapter*{M3: Processes, Threads, and Dispatch}{Section Author: Sahil Gupta}
+\addcontentsline{toc}{chapter}{M3: Processes, Threads, and Dispatch}
+\section{Architecture Overview}
 
-TODO
+Milestone 3 adds the ability to spawn and control user-space processes outside of \co{init}.
+Our implementation spans two main layers: the spawn library (which constructs the
+address space and dispatcher for a new process), and the process manager in
+\co{usr/init} (which owns the global process table and has control over processes). The
+relevant code can be found in the following files:
+
+\begin{itemize}
+    \itemsep-0.5em
+    \item \co{lib/spawn/spawn.c}
+    \item \co{lib/spawn/vspace.c}
+    \item \co{lib/spawn/dispatcher.c}
+    \item \co{include/spawn/spawn.h}
+    \item \co{usr/init/proc_mgmt.c}
+    \item \co{usr/init/proc_mgmt.h}
+    \item \co{lib/aos/paging.c}
+\end{itemize}
+
+\section{Process Spawning}
+
+\subsection{Virtual Address Space Setup}
+
+The kernel requires that the vspace root capability be rooted in the child's own
+cspace, not in \co{init}'s. This means the L0 page table must be created inside
+the child's \co{PAGECN}, not allocated from \co{init}'s slots. At the same time,
+\co{init} needs its own view of that same L0 to install page table entries during
+loading, since Barrelfish's paging API only operates on capabilities in the
+calling process's cspace. We resolve this by creating the L0 in \co{PAGECN}
+slot 0 and copying a reference into \co{init}'s cspace. The child's
+\co{spawninfo} keeps the child-rooted cap as \co{si->vspace} for the dispatcher
+invocation, while \co{init}'s paging operations use the copied reference.
+
+\medskip\noindent
+The child's paging state is initialized with \co{paging_init_state_foreign},
+which builds a fresh shadow page table tree from scratch. Unlike \co{init}'s own paging
+state (which is set up once at boot and grows its slabs on demand), the foreign
+variant pre-allocates fixed-size slab buffers for shadow page table nodes and
+virtual region tracking. The resulting state starts with a single free virtual
+region from \co{BASE_PAGE_SIZE} up to the maximum virtual address, leaving the
+null page unmapped. \co{init}'s slot allocator is shared with the child's paging
+state so that new intermediate page table nodes can be allocated in \co{init}'s
+cspace on the child's behalf as segments are mapped in.
+
+\subsection{ELF Segment Mapping}
+
+Loading the ELF requires \co{init} to temporarily have write access to the
+child's physical memory so it can copy segment data from the module image. For
+each loadable segment, a fresh physical frame is allocated and mapped twice: once
+into the child's address space at the ELF-specified virtual address, and once
+into \co{init}'s address space as a writable scratch window for the copy. A
+capability to the frame is also stored in the child's \co{segcn} so the child
+retains ownership of the physical memory after \co{init}'s mapping is torn down.
+
+\medskip\noindent
+The \co{init}-side mappings cannot be freed immediately after each segment copy.
+Destroying a frame cap while the corresponding PTE still exists would
+desynchronize the kernel's page tables from our shadow tree, causing
+\co{SYS_ERR_VNODE_SLOT_INUSE} on the next mapping operation. Instead,
+\co{spawn_vspace_alloc_and_map} records each \co{init}-side mapping in a small array
+on \co{spawninfo} as it goes. Once the entire ELF is loaded and the module is
+unmapped, its counterpart \co{spawn_vspace_unmap_resources} tears all of them
+down together, removing the PTEs and destroying the caps in a single pass.
+Without this cleanup, \co{init} would leak a cspace slot and a virtual region on
+every spawn, eventually exhausting its allocators.
+
+\subsection{Dispatcher Setup}
+
+The dispatcher frame is the shared control structure between the kernel and the
+process. \co{init} maps it into both address spaces. The child-side address is stored
+in \co{disp->udisp} so the kernel knows where to find it after the handoff, and
+\co{init} uses its own mapping to fill in the initial fields before the process starts.
+The dispatcher is initialized in the disabled state with the process name and PID
+set, so the kernel's scheduler can identify it from the moment it is made
+runnable.
+
+\section{Development Process}
+
+
