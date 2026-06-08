@@ -370,3 +370,22 @@ It would only become attractive if the access pattern were known in
 advance, in which case the pre-mapped region could be sized to cover
 exactly the hot pages and the experiment would collapse back into a
 small eager allocation.
+\newpage
+\section{Development Process}
+For this milestone, Allan began by defining all the relevant data 
+structures for the page tables. \co{include/aos/paging_types.h} contains
+all the definitions for the shadow page tables, the virtual memory \co{vregion}s,
+and the extensions which allow us to map a frame into multiple L3 page tables.
+Then he also implemented the paging code to map frames into these newly created
+structures in \co{lib/aos/paging.c}.
+
+\medskip\noindent
+Sahil then implemented the unmap code as well as the other paging function. 
+To finish up the pre-testing code, Shane implemented the \co{morecore} code 
+as well as working on the lazy allocator with the page fault handler.
+
+\medskip\noindent
+The main challenge we faced with this milestone was probably refilling the slabs.
+We cannot refill the slabs when we completely exhaust the pools, as the refill
+code requires the paging code which has exhausted slabs. So we decided on a 
+threshold, which eventually allowed us to pass the milestone.

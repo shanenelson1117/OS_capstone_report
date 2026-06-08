@@ -1,82 +1,99 @@
 \chapter*{M1: Memory Allocator}{\textbf{Author: Chenyi Wang}
-\newline 
- \newline 
- The goal of this milestone is to enable user level processes to manage their virtual address spaces.}
+\newline
+ \newline
+ The goal of this milestone is to enable user-level processes to manage their virtual address spaces.}
 \addcontentsline{toc}{chapter}{M1: Memory Allocator}
 \section{M1: Memory Allocator}
-\subsection{Server placement}
+\subsection{Server Placement}
 
 We implemented the memory server inside the init domain rather than a separate
-process. The init domain owns the only mm instance, aos\_mm, defined as a file static variable
-in usr/init/mem\_alloc.c. Every other domain requests RAM by sending an
-AOS\_RPC\_MSG\_RAM\_REQ over its LMP channel to init. The handler
-handle\_ram\_req in usr/init/rpc\_server.c calls aos\_ram\_alloc\_aligned, which
-is a thin wrapper around mm\_alloc\_aligned, and replies with the resulting
-RAM cap.
+process. The init domain owns the only mm instance, \co{aos_mm}, defined as a
+file-static variable in \co{usr/init/mem_alloc.c}. Every other domain requests
+RAM by sending an \co{AOS_RPC_MSG_RAM_REQ} over its LMP channel to init. The
+handler \co{handle_ram_req} in \co{usr/init/rpc_server.c} calls
+\co{aos_ram_alloc_aligned}, which is a thin wrapper around \co{mm_alloc_aligned},
+and replies with the resulting RAM cap.
 
+\medskip\noindent
 This kept the bootstrap problem trivial. The init endpoint cap is already in
-every child's CSpace as cap\_initep, so no name service or extra cap exchange
+every child's CSpace as \co{cap_initep}, so no name service or extra cap exchange
 is needed. We can move the memory server into its own domain later without
-changing the client side, since aos\_rpc\_get\_memory\_channel would just
-return a different aos\_rpc.
+changing the client side, since \co{aos_rpc_get_memory_channel} would just
+return a different \co{aos_rpc}.
 
-\subsection{Disjoint allocations}
+\subsection{Disjoint Allocations}
 
 There is exactly one mm instance, and all requests are serialised through the
 single init dispatcher thread, so two requests can never be served from
-overlapping regions. mm\_alloc\_aligned reserves a region from the free list
+overlapping regions. \co{mm_alloc_aligned} reserves a region from the free list
 before it returns, and the capability machinery prevents the same physical
 memory from being retyped to RAM twice. Disjointness is a structural property
 of the design; the handler does not need to check it.
 
-\subsection{Per client quota}
+\subsection{Per-Client Quota}
 
 To stop one misbehaving client from grabbing all of physical memory, every
-client\_state carries a bytes\_allocated counter. The handler increments it
-after each successful allocation. A request is rejected with
-LIB\_ERR\_RAM\_ALLOC when bytes\_allocated + bytes would exceed the quota,
-currently 256 MiB. The quota is hard coded in handle\_ram\_req but easy to
-move to a configurable constant later.
+\co{client_state} carries a \co{bytes_allocated} counter. The handler increments
+it after each successful allocation. A request is rejected with
+\co{LIB_ERR_RAM_ALLOC} when \co{bytes_allocated} plus the requested size would
+exceed the quota, currently 256 MiB. The quota is hard-coded in
+\co{handle_ram_req} but easy to move to a configurable constant later.
 
+\medskip\noindent
 Two caveats. First, the counter only tracks allocations, not frees. Once we
 add an explicit free RPC, the counter has to be decremented. Second, the
 counter is not yet protected by a mutex. All handlers currently run on init's
 single dispatcher thread, so there is no race in practice, but this assumption
-breaks the moment a second worker thread is added. Locking is on our follow up
+breaks the moment a second worker thread is added. Locking is on our follow-up
 list.
 
 \subsection{Alignment}
 
-The alignment value the client passes in aos\_rpc\_get\_ram\_cap goes through
-to aos\_ram\_alloc\_aligned untouched. We do not validate or round it inside
-the handler; the mm library is the authority on what alignments are
-achievable.
+The alignment value the client passes in \co{aos_rpc_get_ram_cap} goes through
+to \co{aos_ram_alloc_aligned} untouched. We do not validate or round it inside
+the handler; the mm library is the authority on what alignments are achievable.
 
-\subsection{Error handling}
+\subsection{Error Handling}
 
-A failure reply carries cap is NULL\_CAP, actual\_bytes is 0, and an errval\_t
-in words[2]. The client side aos\_rpc\_get\_ram\_cap reads words[2] as the
-error code and returns immediately on failure, so the caller never sees a
-partially filled capref.
+A failure reply carries a \co{NULL_CAP} cap, \co{actual_bytes} of 0, and an
+\co{errval_t} in \co{words[2]}. The client-side \co{aos_rpc_get_ram_cap} reads
+\co{words[2]} as the error code and returns immediately on failure, so the
+caller never sees a partially filled \co{capref}.
 
-\subsection{Switching children to the remote allocator}
+\subsection{Switching Children to the Remote Allocator}
 
 Once a child establishes its RPC channel to init inside
-barrelfish\_init\_onthread, we call ram\_alloc\_set(NULL).
-Per the book this clears the local allocator function pointer. After that,
-ram\_alloc\_aligned falls through ram\_alloc\_fixed and into
-ram\_alloc\_remote once the early boot RAM buffer is exhausted, and
-ram\_alloc\_remote calls aos\_rpc\_get\_ram\_cap. The effect is that
-frame\_alloc and malloc transparently route through the memory server. The
-init domain returns early from barrelfish\_init\_onthread via the
-if (init\_domain) return guard, so init itself never executes
-ram\_alloc\_set(NULL), and there is no risk of init RPC ing itself.
+\co{barrelfish_init_onthread}, we call \co{ram_alloc_set(NULL)}.
+This clears the local allocator function pointer. After that,
+\co{ram_alloc_aligned} falls through \co{ram_alloc_fixed} and into
+\co{ram_alloc_remote} once the early boot RAM buffer is exhausted, and
+\co{ram_alloc_remote} calls \co{aos_rpc_get_ram_cap}. The effect is that
+\co{frame_alloc} and \co{malloc} transparently route through the memory server.
+The init domain returns early from \co{barrelfish_init_onthread} via the
+\co{if (init_domain) return} guard, so init never calls \co{ram_alloc_set(NULL)}
+and there is no risk of it calling its own RPC server.
 
 \subsection{Limitations}
 
-We have not implemented a per client free path yet, so caps returned to a
+We have not implemented a per-client free path yet, so caps returned to a
 client stay accounted against its quota for the lifetime of the system.
-There is no locking on aos\_mm or on the client list. The 256 MiB quota is
+There is no locking on \co{aos_mm} or on the client list. The 256 MiB quota is
 not tuned for the actual physical memory size of the target board; on a
-1 GiB imx8x system this allows at most four clients before quota errors
+1~GiB iMX8X system this allows at most four clients before quota errors
 kick in.
+
+\section{Development Process}
+
+For this milestone, we split the parts evenly between each other. First, Allan
+implemented the \co{lib/mm} library, including support for partial frees and 
+range allocations. For mapping frame capabilities through a linear allocator, Sahil implemented the
+main paging code which enabled this feature. At this point, we did misunderstand
+some of the specification, as we thought we only required one L3 page table for 
+this milestone.  Shane then finished up the pre-testing code for the milestone by implementing the 
+slab allocator refill code
+
+\medskip\noindent
+In terms of debugging most of the fault was with the paging code as we were under the impression
+we only needed a single L3 leaf page table. Once we fixed this using the same linear allocation
+pattern, the rest of the fixes we made were quite straightforward and we were able to finish the
+milestone.
