@@ -20,6 +20,92 @@ when the process is done before we print done.
 \\
 this replicates bash behavior
 
+\section{Keyboard input: userspace UART driver}
+
+In milestone 3 we implemented a terminal service that allows any process to write
+characters to the console via \co{aos_rpc_serial_putchar}. To support the shell, we also
+need to be able to read characters typed by the user. This requires a userspace driver
+for the LPUART3 serial port, which is the port wired to the serial-to-USB converter on the
+Toradex board.
+
+\subsection{Device drivers}
+
+Two drivers are required. The \textbf{GIC distributor} driver (\co{usr/drivers/gic_dist/})
+configures the ARM Generic Interrupt Controller so that a given interrupt line is forwarded
+to a specific CPU core. The \textbf{LPUART} driver (\co{usr/drivers/lpuart/}) provides
+\co{lpuart_init}, \co{lpuart_putchar}, \co{lpuart_getchar} and \co{lpuart_enable_interrupt}.
+Both drivers require their device register regions to be mapped read/write with caching disabled.
+Since \co{init} is the most privileged userspace process, it can forge \co{DevFrame} capabilities
+for arbitrary physical addresses and map them itself:
+
+\begin{lstlisting}
+struct capref frame;
+slot_alloc(&frame);
+devframe_forge(frame, IMX8X_GIC_DIST_BASE, IMX8X_GIC_DIST_SIZE, 
+               my_core_id);
+paging_map_frame_attr(get_current_paging_state(), &gic_base,
+                      IMX8X_GIC_DIST_SIZE, frame,
+                      VREGION_FLAGS_READ_WRITE_NOCACHE);
+\end{lstlisting}
+
+\medskip\noindent
+The same procedure is applied to \co{IMX8X_UART3_BASE} for the LPUART registers.
+
+\subsection{Interrupt Chain Setup}
+
+The full initialization sequence follows the ordering required by the hardware. The interrupt
+handler must be registered before the interrupt is enabled, so that no interrupt arrives
+while the system is unprepared to handle it.
+
+\begin{enumerate}
+  \item Initialize the GIC distributor driver with its mapped register base.
+  \item Initialize the LPUART driver with its mapped register base.
+  \item Use \co{inthandler_alloc_dest_irq_cap} to allocate an \co{IRQDest}
+        capability for UART3's interrupt vector (260), then register
+        \co{uart_irq_handler} on \co{init}'s default waitset via
+        \co{inthandler_setup}.
+  \item Enable the interrupt in the GIC distributor:
+\begin{lstlisting}
+gic_dist_enable_interrupt(gds, IMX8X_UART3_INT, 0x1 /* cpu0 */, 0);
+\end{lstlisting}
+  \item Enable the receive interrupt in the LPUART:
+\begin{lstlisting}
+lpuart_enable_interrupt(g_lpuart);
+\end{lstlisting}
+\end{enumerate}
+
+\medskip\noindent
+When a key is pressed, the LPUART hardware fires IRQ 260, the GIC forwards it to
+CPU 0, and the CPU driver delivers an LMP message to the \co{IRQDest} endpoint.
+This wakes \co{uart_irq_handler} on \co{init}'s waitset.
+
+\subsection{Ring Buffer and Deferred RPC Replies}
+
+The interrupt handler drains all available characters from the LPUART into a 256-byte
+ring buffer:
+
+\begin{lstlisting}
+static void uart_irq_handler(void *arg) {
+    char c;
+    while (lpuart_getchar(g_lpuart, &c) == SYS_ERR_OK) {
+        if (pending_reader != NULL) {
+            cs_send3(pending_reader, NULL_CAP, AOS_RPC_MSG_CHAR_RESP, ...);
+            pending_reader = NULL;
+        } else {
+            buf_push(c);
+        }
+    }
+}
+\end{lstlisting}
+
+\medskip\noindent
+When a process calls \co{aos_rpc_serial_getchar}, \co{init} receives the LMP message
+in \co{handle_getchar} and calls \co{uart_service_getchar(cs)}. If a character is already
+buffered, the reply is sent immediately. Otherwise, the \co{client_state} pointer is parked
+as \co{pending_reader} and the reply is deferred until the next interrupt fires. This avoids
+blocking \co{init}'s event loop. On QEMU, where there is no LPUART, the implementation falls
+back to \co{sys_getchar}.
+
 \section{RamFS file system support}
 We route all RamFS file operations through the \co{init} process. Each core has its own
 in-memory file system. In order to support this we add file system functionality to

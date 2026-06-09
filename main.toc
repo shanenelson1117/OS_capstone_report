@@ -89,8 +89,12 @@
 \contentsline {chapter}{M7: Shell}{32}{chapter*.90}%
 \contentsline {section}{Command processing}{32}{section*.91}%
 \contentsline {subsection}{Background tasks}{32}{subsection*.92}%
-\contentsline {section}{RamFS file system support}{32}{section*.93}%
-\contentsline {section}{Pipes and I/O redirection}{33}{section*.94}%
-\contentsline {section}{Synchronizing serial input \& output}{34}{section*.95}%
-\contentsline {section}{Development process}{34}{section*.96}%
-\contentsline {chapter}{Appendix A: Shell Commands}{35}{chapter*.97}%
+\contentsline {section}{Keyboard input: userspace UART driver}{32}{section*.93}%
+\contentsline {subsection}{Device drivers}{32}{subsection*.94}%
+\contentsline {subsection}{Interrupt Chain Setup}{33}{subsection*.95}%
+\contentsline {subsection}{Ring Buffer and Deferred RPC Replies}{33}{subsection*.96}%
+\contentsline {section}{RamFS file system support}{33}{section*.97}%
+\contentsline {section}{Pipes and I/O redirection}{34}{section*.98}%
+\contentsline {section}{Synchronizing serial input \& output}{35}{section*.99}%
+\contentsline {section}{Development process}{35}{section*.100}%
+\contentsline {chapter}{Appendix A: Shell Commands}{36}{chapter*.101}%
