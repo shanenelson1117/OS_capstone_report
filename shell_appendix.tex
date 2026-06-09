@@ -1,2 +1,128 @@
 \chapter*{Appendix A: Shell Commands}{}
+\label{appA}
 \addcontentsline{toc}{chapter}{Appendix A: Shell Commands}
+
+All commands are implemented as shell builtins. Relative paths are resolved against the
+current working directory. Output redirection (\cl{>}) and input redirection (\cl{<}) are
+supported where noted. Any command can be run in the background by appending \cl{\&}.
+
+\section*{File System}
+
+\begin{description}
+
+\item[\texttt{ls [path]}]
+List the contents of \textit{path}, or the current working directory if omitted.
+Directories are printed with a trailing \texttt{/}.
+
+\item[\texttt{cd [path]}]
+Change the current working directory to \textit{path}. With no argument, resets to
+the root directory \texttt{/}.
+
+\item[\texttt{pwd}]
+Print the current working directory.
+
+\item[\texttt{cat <file>}]
+Print the contents of \textit{file} to standard output. Supports output redirection
+(\cl{cat file > out}) and use as the left-hand side of a pipe
+(\cl{cat file | run prog}).
+
+\item[\texttt{touch <file>}]
+Create \textit{file} if it does not already exist.
+
+\item[\texttt{mkdir <path>}]
+Create a directory at \textit{path}.
+
+\item[\texttt{rmdir <path>}]
+Remove the directory at \textit{path}. The directory must exist and be empty.
+
+\item[\texttt{rm <file>}]
+Remove \textit{file}.
+
+\end{description}
+
+\section*{I/O}
+
+\begin{description}
+
+\item[\texttt{echo [text...]}]
+Print \textit{text} followed by a newline. Supports output redirection
+(\cl{echo hello > file}) and use as the left-hand side of a pipe
+(\cl{echo hello | run prog}). Arguments containing spaces may be quoted
+(\cl{echo "hello world"}).
+
+\end{description}
+
+\section*{Process Management}
+
+\begin{description}
+
+\item[\texttt{run <program> [args...]}]
+Spawn \textit{program} with optional \textit{args} on the current core.
+Supports input and output file redirection. Can be piped with a second
+\cl{run} or \cl{oncore} command:
+\begin{lstlisting}
+run writer | run reader
+run writer | oncore 2 reader
+\end{lstlisting}
+
+\item[\texttt{oncore <core> <program> [args...]}]
+Spawn \textit{program} on the specified \textit{core} (0--3). Accepts the
+same pipe and redirection combinations as \cl{run}:
+\begin{lstlisting}
+oncore 1 writer | oncore 2 reader
+oncore 1 prog > out.txt
+\end{lstlisting}
+
+\item[\texttt{ps}]
+List all running processes. Prints PID, core, state (\texttt{spawning},
+\texttt{running}, \texttt{paused}, \texttt{exited}, or \texttt{killed}),
+and command name.
+
+\item[\texttt{kill <pid>}]
+Send a kill signal to the process with the given \textit{pid}.
+
+\item[\texttt{time <command>}]
+Execute \textit{command} and print the wall-clock elapsed time upon
+completion. Works with any shell builtin or \cl{run}/\cl{oncore} invocation:
+\begin{lstlisting}
+time run hello
+\end{lstlisting}
+
+\end{description}
+
+\section*{Shell Features}
+
+\begin{description}
+
+\item[\texttt{command \&}]
+Run \textit{command} in the background. For \cl{run} and \cl{oncore} the
+spawned process PID is printed as \cl{[N] pid}; for builtins the command
+name is printed as \cl{[N] name}. Output is captured and printed atomically
+when the task completes, followed by \cl{[N] done\tabularnewline command}.
+
+\item[\texttt{\$!}]
+Expands to the PID of the most recently backgrounded process.
+
+\item[\texttt{\$?}]
+Expands to the exit status of the most recently completed foreground
+\cl{run} or \cl{oncore} command.
+
+\item[\texttt{cmd > file}]
+Redirect standard output to \textit{file}. Supported by \cl{echo},
+\cl{cat}, \cl{run}, and \cl{oncore}. Creates the file if it does not
+exist; truncates it if it does.
+
+\item[\texttt{cmd < file}]
+Redirect standard input from \textit{file}. Supported by \cl{run} and
+\cl{oncore}.
+
+\item[\texttt{cmd1 | cmd2}]
+Pipe the output of \textit{cmd1} into the standard input of \textit{cmd2}.
+The left-hand side may be \cl{echo}, \cl{cat}, \cl{run}, or \cl{oncore};
+the right-hand side must be \cl{run} or \cl{oncore}.
+
+\item[\texttt{"text with spaces"}]
+Double quotes allow arguments containing spaces to be passed as a single
+token.
+
+\end{description}

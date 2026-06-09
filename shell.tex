@@ -1,24 +1,7 @@
-\chapter*{M7: Shell}{}
- The goal of this milestone is to enable a user to interact with the system.
+\chapter*{M7: Shell}{\textbf{Section Authors: Shane Nelson \& Sahil Gupta}}
+ \newline 
+ \newline The goal of this milestone is to enable a user to interact with the system.
 \addcontentsline{toc}{chapter}{M7: Shell}
-
-\section{Command processing}
-
-\subsection{Background tasks}
-TODO: 
-Have one main thread which periodically just spins in an event dispatch on a timer
-(or another method) and checks serial in (which should be buffered to lines).
-\\ 
-If the command is a spawn and there is no \& make the main thread wait on the process(es)
-\\
-If there is an \& then create a new thread and have it wait on the process,
-as an argument give it a number (n) and binary name. Have it print out [n] pid,
-then wait on the process (the main thread should synchronize to not grab new input 
-until this happens, we can use semaphores). then when it is done print [n] done and the command.
-it may also make sense to write the output to a temp file that way we can print it all at once
-when the process is done before we print done.
-\\
-this replicates bash behavior
 
 \section{Keyboard input: userspace UART driver}
 
@@ -146,9 +129,7 @@ errval_t aos_rpc_fs_readdir(struct aos_rpc *chan, fs_fhandle_t handle,
 The corresponding handlers are added to \co{rpc_server.c} and message tags to \co{aos_rpc.h}. The shell (or user process) can specify 
 specify the flags which they want the file to be opened with, and can embedd the core which they
 prefer to create the file on by passing \co{FS_OPEN_ON_CORE(core) | FS_OPEN_CREATE} to \co{aos_rpc_fs_open()} as the \co{flags} argument. This is intended to mirror
-the spawn procedure of allowing a user to specify the core to spawn the procedure on. This works in the same way a 
-shell spawn works (\cl{$ run process ---core n}), via the \cl{---core} command line argument like so,
-\cl{$ touch file-name ---core n}. Any process can access files on any core, this is implemented with UMP redirection. To facilitate
+the spawn procedure of allowing a user to specify the core to spawn the procedure on (in the future, the shell does not currently support this). Any process can access files on any core, this is implemented with UMP redirection. To facilitate
 demultiplexing file operations to the correct core, we embed the core in the \co{fs_handle_t} in the same manner
 that the core of a process is embedded in its pid. Via this mechanism, \co{init} can route the operation to the correct
 core without intervention from the user. One important constraint is that a user must supply the \co{FS_OPEN_ON_CORE(core)} flag to access 
@@ -160,6 +141,7 @@ with information about where their input and output flows, then \co{aos_rpc_seri
 routes characters (TODO: line granularity not characters) to the correct endpoint. Piping I/O between processes works 
 in the following manner:
 \begin{enumerate}
+  \label{pipe_steps}
   \item The shell first creates and allocates a capability for the frame:
   \begin{lstlisting}
   struct capref pipe_frame;
@@ -189,9 +171,48 @@ in the following manner:
 For file redirection the process is much the same except, fields are simply set in the \co{io_config_frame} that hold
 \co{fs_handle_t} for the input and/or output file, no capability operations have to occur and are skipped with \co{NULL_CAP} checks. 
 \section{Synchronizing serial input \& output}
-TODO: Buffer calls to aos\_rpc\_serial\_getchar/putchar by only committing full lines (stop when newline char is seen) in aos\_rpc.c and route all calls to bsp init which can set
-a global flag to serialize access. Make sure only bsp init can call sys\_putchar.
-If this doesn't work find another way (maybe in the book?)
+Serial input is synchronized with RPC. Because the UART driver is an RPC service, we trivially synchronize
+by making \co{bsp_init} the only process with a UART driver. All calls that do not come from core 0 are routed through UMP
+to core 0. Because \co{init} is single threaded this means that only one request to the driver is handled at once. Serial output 
+synchronization between arbitrary processes is not broadly implemented. The shell itself uses a mutex to guard access to the 
+serial out which ensures that all threads in the shell access the shell sequentially. Background processes output are only printed
+once they complete. 
+
+\section{Command processing}
+See \hyperref[appA]{Appendix A} for the full list of commands supported. Commands are processed in an infinite loop which reads serial input, parses the
+input into tokens, and then dispatches to the correct handler based on the command.
+All commands are implemented as builtins. We wrap commands in a structure which stores
+the name of any files to be used as input or output. For \cl{$ run} and \cl{$ oncore} redirecting
+this I/O is already handled, but because builtins are not their own processes, output is not correctly
+routed through RPC, so files are manually written. To handle pipes we create a structure which can 
+hold a reader and a writer command and correctly spawn the processes using the steps outlined \hyperref[pipe_steps]{above}.
+Commands on either side of the pipe must be either \cl{run} or \cl{oncore} but any combination is 
+possible. Files can only be used as input on the left side of the pipe and output on the right side of the pipe,
+with violation of this causing an error to print. 
+
+\subsection{Environment variables}
+In order to facilitate \cl{$!} or \cl{$?} we store global variables in the shell for the last background
+pid and the last foreground exit code. When tokenizing we simply read these variables and replace the env variables
+with the local values. We also add support for the shell storing a current working directory. This allows us
+to create absolute paths from relative paths and support the commands \cl{$ pwd}, \cl{$ cd}. This is 
+mainly an ergonomic feature but it aids in user immersion and the support of relative paths is immense for 
+usability. 
+
+
+\subsection{Background tasks}
+In order to support background tasks, rather than calling dispatch in our loop, we create a new thread whose 
+entry point is \co{background_task()}. This function is a wrapper around dispatch which simply prints 
+the background task number and the command (or pid if the underlying command is \cl{run} or \cl{oncore}).
+We redirect the output of the command into a temp file, so it can be printed atomically upon completion. We
+then call dispatch on the underlying command and wait for it to complete via RPC. We then acquire the output mutex and \cl{cat} the tempfile
+and print out that the background task is done before releasing the mutex and exiting. We believe this provides
+a better user experience than bash because terminal output is not garbled.
+
 \section{Development process}
 Shell development started when Shane implemented the infrastructure needed for file system 
-operations over RPC, as well as the code which enables spawning processes with redirected I/O.
+operations over RPC, as well as the code which enables spawning processes with redirected I/O. Sahil
+then wrote the UART driver and Shane and Sahil implemented all remaining shell functionality. Testing 
+and debugging was done mainly adhoc (other than piping which was independently tested) via experimentation
+in the shell environment, and we recognize
+that there are many scenarios we cannot test this way. Additionally, some functionality shortcuts were taken such as
+only implementing file redirection for a subset of commands.

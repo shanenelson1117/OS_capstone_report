@@ -1,0 +1,31 @@
+\chapter*{Appendix B: AI Usage Declaration}{}
+\addcontentsline{toc}{chapter}{Appendix B: AI Usage Declaration}
+
+We used generative AI (Claude) in the following ways:
+\begin{enumerate}
+  \item Spelling and grammar checking of this report.
+  \item To help resolving issues with \LaTeX, such as commands we didn't know
+  or otherwise debugging issues that came up.
+  \item Performing mechanical changes to our code in limited instances:
+  \begin{enumerate}
+    \item Creation of skeletons for repeated stub functions in the RPC code. For example
+    AI was used to generate \co{handleXXX} function signatures and empty bodies.
+    \item Refactoring the handler methods in \co{rpc_server.c} to be able to handle a UMP path
+    as well as the already present LMP path. No logic was written, just mechanically changed the form of the functions.
+    \item Wrapping the \co{aos_rpc.c} functions in our retry macro.
+    \item Probably other mechanical changes I cannot remember at present.
+  \end{enumerate}
+  Logic was not written with AI, just these mechanical code shape updates.
+  \item Where mentioned in the Shell code to offload tokenization and the help command.
+  \item To generate the \LaTeX  skeleton for Appendix A, i.e. everything on an item line.
+  \item For the RPC code I (Shane) gave claude a very detailed design document and had it write
+  a todo list to implement the design document (without reasoning about the correctness of the plan).
+  \item For code that we added on that was not part of the normal functionality (i.e. perthread LMP) we gave claude specific behaviors
+  to test for and iterated with it to write c test code to test these functionalities.
+  \item At the beginning when unfamiliar with the codebase to summarize how everything fit together.
+  \item Generating python visualization scripts used in the creation of the graphs in this report.
+\end{enumerate}
+
+\noindent Overall we feel as though the AI was very helpful for these menial tasks and allowed us to spend our time
+experimenting and actually learning rather than spending time mechanically applying changes. looking up \LaTeX documentation,
+or otherwise not learning how to design and implement an operating system.

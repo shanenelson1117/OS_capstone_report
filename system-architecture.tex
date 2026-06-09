@@ -186,3 +186,20 @@ The system runs on up to four cores, each hosting its own independent
 communicate over UMP channels backed by shared physical frames, forming a
 fully-connected mesh. From the perspective of a user process, the
 system appears as a single coherent OS regardless of how many cores are active.
+
+\section{Design goals for this project}
+\label{goals}
+Our main design goals are as follows:
+\begin{enumerate}
+      \item Allow as much parallelism and concurrency as possible. Modern systems are concurrent,
+      we want our system to lean into concurrency. This has the benefits of better performance,
+      but also allows the user to use our system in a concurrent matter symbiotically rather than
+      fighting the underlying implementation.
+      \item Given that we expect many threads to be running on our system, we want to allocate memory
+      as lazily as possible. This means that memory is only allocated when it is needed. Low memory usage
+      allows us to enable better concurrency.
+      \item When concurrency is not effected, intelligently approach the tradeoff between performance
+      and ease of implementation, code readibility, and code maintainability. Unless performance is
+      significantly impacted we choose to make the code base as readable and simple as possible. This has
+      help us immensly as all milestones build on each other and frequently required editing past work.
+\end{enumerate}
