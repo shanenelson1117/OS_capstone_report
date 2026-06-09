@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1781000998.87207 "/Users/shanenelson/Classes/481a/CSE481A_labreport/main.tex" "main.pdf" "main" 1781001000.45044 0
+["pdflatex"] 1781001553.35896 "/Users/shanenelson/Classes/481a/CSE481A_labreport/main.tex" "main.pdf" "main" 1781001555.56255 0
   "/Users/shanenelson/Classes/481a/CSE481A_labreport/main.tex" 1780998621.15143 1776 acec47028ac0540b19205dda70dbee64 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
@@ -138,11 +138,11 @@
   "images/osarch.drawio.png" 1780868686.27217 115782 7007c22e264c3255d843429a500b865c ""
   "images/perthread_purple.png" 1780372909.69008 46949 f9802af8980f7c34ef7af668500cad93 ""
   "images/waiting.png" 1780372899.82464 20470 0616fe6ab437527213908c5aa07cde22 ""
-  "main.aux" 1781001000.34926 18302 2c08ab5bb48849de2f0bac984f8d95c2 "pdflatex"
-  "main.out" 1781001000.35056 15999 fc058afffc9ba2d0b809ccbb185f1cc4 "pdflatex"
+  "main.aux" 1781001555.42236 18302 2c08ab5bb48849de2f0bac984f8d95c2 "pdflatex"
+  "main.out" 1781001555.42421 15999 fc058afffc9ba2d0b809ccbb185f1cc4 "pdflatex"
   "main.tex" 1780998621.15143 1776 acec47028ac0540b19205dda70dbee64 ""
-  "main.toc" 1781001000.35076 7365 f57c25a6feb66c11bc5f9f38a6e06a9c "pdflatex"
-  "memory-allocation.tex" 1780895324.98837 4823 a5185e475c5ebc46f4c0d47dc7474396 ""
+  "main.toc" 1781001555.42452 7365 f57c25a6feb66c11bc5f9f38a6e06a9c "pdflatex"
+  "memory-allocation.tex" 1781001553.132 4844 16e5484b6cc61b68ac15003c152c3078 ""
   "multicore.tex" 1780606236.22893 7370 32a48bb262d93b1182c07840ae2f524e ""
   "processes.tex" 1780967611.29966 6283 37900c464884f8ea427ac93dc3916f34 ""
   "rpc.tex" 1780727454.14184 16149 346fd74abaaf4e5084afba1604526c79 ""
