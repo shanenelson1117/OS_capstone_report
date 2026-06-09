@@ -49,47 +49,48 @@
 \contentsline {subsection}{Dispatcher Setup}{17}{subsection*.50}%
 \contentsline {section}{Process Management}{17}{section*.51}%
 \contentsline {section}{Development Process}{17}{section*.52}%
-\contentsline {chapter}{M4: Core-Local Message Passing (LMP)}{18}{chapter*.53}%
-\contentsline {section}{Architecture overview}{18}{section*.54}%
-\contentsline {subsection}{Client-side}{18}{subsection*.55}%
-\contentsline {subsubsection}{Thread-Local state}{19}{subsubsection*.56}%
-\contentsline {subsubsection}{Channel initialization}{19}{subsubsection*.57}%
-\contentsline {subsubsection}{Synchronous send and receive}{19}{subsubsection*.58}%
-\contentsline {subsection}{Server-side}{19}{subsection*.59}%
-\contentsline {subsubsection}{Handshake protocol}{19}{subsubsection*.60}%
-\contentsline {subsubsection}{General purpose serving}{19}{subsubsection*.61}%
-\contentsline {subsubsection}{Special case: {\textcolor {codeblue}{\textbf {\texttt {aos_rpc_proc_wait()}}}}}{20}{subsubsection*.62}%
-\contentsline {subsection}{Shared memory for large messages}{20}{subsection*.63}%
-\contentsline {section}{Optimizations and performance evaluation}{20}{section*.64}%
-\contentsline {subsection}{Performance Goals and Optimizations}{20}{subsection*.65}%
-\contentsline {subsubsection}{1. Latency Reduction for Multithreaded LMP}{20}{subsubsection*.66}%
-\contentsline {subsubsection}{2. Memory Usage Reduction of Large Message Infrastructure}{20}{subsubsection*.67}%
-\contentsline {subsection}{Performance evaluation}{21}{subsection*.68}%
-\contentsline {subsubsection}{Microbenchmarks}{21}{subsubsection*.69}%
-\contentsline {subsubsection}{Results}{21}{subsubsection*.70}%
-\contentsline {section}{Development process}{23}{section*.71}%
-\contentsline {chapter}{M5: Multicore}{24}{chapter*.72}%
-\contentsline {section}{Architecture Overview}{24}{section*.73}%
-\contentsline {subsection}{Initial URPC Frame}{24}{subsection*.74}%
-\contentsline {subsection}{Booting Another Core}{25}{subsection*.75}%
-\contentsline {subsection}{Multicore Memory Management}{25}{subsection*.76}%
-\contentsline {subsection}{Suspend, Resume, Shutdown, and Reboot}{26}{subsection*.77}%
-\contentsline {section}{Development Process}{26}{section*.78}%
-\contentsline {chapter}{M6: User-Level Message Passing (UMP)}{27}{chapter*.79}%
-\contentsline {section}{Architecture overview}{27}{section*.80}%
-\contentsline {subsection}{Initializing UMP channels}{27}{subsection*.81}%
-\contentsline {subsection}{Memory layout of UMP channel}{28}{subsection*.82}%
-\contentsline {subsection}{Handling incoming messages}{28}{subsection*.83}%
-\contentsline {subsection}{Requestor}{29}{subsection*.84}%
-\contentsline {subsubsection}{Facilitating global operations}{29}{subsubsection*.85}%
-\contentsline {subsection}{Receiver}{30}{subsection*.86}%
-\contentsline {subsection}{Concurrent UMP operations}{30}{subsection*.87}%
-\contentsline {section}{Development process}{31}{section*.88}%
-\contentsline {chapter}{M7: Shell}{32}{chapter*.89}%
-\contentsline {section}{Command processing}{32}{section*.90}%
-\contentsline {subsection}{Background tasks}{32}{subsection*.91}%
-\contentsline {section}{RamFS file system support}{32}{section*.92}%
-\contentsline {section}{Pipes and I/O redirection}{33}{section*.93}%
-\contentsline {section}{Synchronizing serial input \& output}{34}{section*.94}%
-\contentsline {section}{Development process}{34}{section*.95}%
-\contentsline {chapter}{Appendix A: Shell Commands}{35}{chapter*.96}%
+\contentsline {subsection}{Memory Reserves}{17}{subsection*.53}%
+\contentsline {chapter}{M4: Core-Local Message Passing (LMP)}{18}{chapter*.54}%
+\contentsline {section}{Architecture overview}{18}{section*.55}%
+\contentsline {subsection}{Client-side}{18}{subsection*.56}%
+\contentsline {subsubsection}{Thread-Local state}{19}{subsubsection*.57}%
+\contentsline {subsubsection}{Channel initialization}{19}{subsubsection*.58}%
+\contentsline {subsubsection}{Synchronous send and receive}{19}{subsubsection*.59}%
+\contentsline {subsection}{Server-side}{19}{subsection*.60}%
+\contentsline {subsubsection}{Handshake protocol}{19}{subsubsection*.61}%
+\contentsline {subsubsection}{General purpose serving}{19}{subsubsection*.62}%
+\contentsline {subsubsection}{Special case: {\textcolor {codeblue}{\textbf {\texttt {aos_rpc_proc_wait()}}}}}{20}{subsubsection*.63}%
+\contentsline {subsection}{Shared memory for large messages}{20}{subsection*.64}%
+\contentsline {section}{Optimizations and performance evaluation}{20}{section*.65}%
+\contentsline {subsection}{Performance Goals and Optimizations}{20}{subsection*.66}%
+\contentsline {subsubsection}{1. Latency Reduction for Multithreaded LMP}{20}{subsubsection*.67}%
+\contentsline {subsubsection}{2. Memory Usage Reduction of Large Message Infrastructure}{20}{subsubsection*.68}%
+\contentsline {subsection}{Performance evaluation}{21}{subsection*.69}%
+\contentsline {subsubsection}{Microbenchmarks}{21}{subsubsection*.70}%
+\contentsline {subsubsection}{Results}{21}{subsubsection*.71}%
+\contentsline {section}{Development process}{23}{section*.72}%
+\contentsline {chapter}{M5: Multicore}{24}{chapter*.73}%
+\contentsline {section}{Architecture Overview}{24}{section*.74}%
+\contentsline {subsection}{Initial URPC Frame}{24}{subsection*.75}%
+\contentsline {subsection}{Booting Another Core}{25}{subsection*.76}%
+\contentsline {subsection}{Multicore Memory Management}{25}{subsection*.77}%
+\contentsline {subsection}{Suspend, Resume, Shutdown, and Reboot}{26}{subsection*.78}%
+\contentsline {section}{Development Process}{26}{section*.79}%
+\contentsline {chapter}{M6: User-Level Message Passing (UMP)}{27}{chapter*.80}%
+\contentsline {section}{Architecture overview}{27}{section*.81}%
+\contentsline {subsection}{Initializing UMP channels}{27}{subsection*.82}%
+\contentsline {subsection}{Memory layout of UMP channel}{28}{subsection*.83}%
+\contentsline {subsection}{Handling incoming messages}{28}{subsection*.84}%
+\contentsline {subsection}{Requestor}{29}{subsection*.85}%
+\contentsline {subsubsection}{Facilitating global operations}{29}{subsubsection*.86}%
+\contentsline {subsection}{Receiver}{30}{subsection*.87}%
+\contentsline {subsection}{Concurrent UMP operations}{30}{subsection*.88}%
+\contentsline {section}{Development process}{31}{section*.89}%
+\contentsline {chapter}{M7: Shell}{32}{chapter*.90}%
+\contentsline {section}{Command processing}{32}{section*.91}%
+\contentsline {subsection}{Background tasks}{32}{subsection*.92}%
+\contentsline {section}{RamFS file system support}{32}{section*.93}%
+\contentsline {section}{Pipes and I/O redirection}{33}{section*.94}%
+\contentsline {section}{Synchronizing serial input \& output}{34}{section*.95}%
+\contentsline {section}{Development process}{34}{section*.96}%
+\contentsline {chapter}{Appendix A: Shell Commands}{35}{chapter*.97}%

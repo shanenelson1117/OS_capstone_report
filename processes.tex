@@ -88,5 +88,17 @@ as making a process runnable, suspending a process, terminating a process, and w
 library is the wrapper and entry point for this functionality, invoked via RPC.
 
 \section{Development Process}
+For this milestone, we divided work around, and so the order in which we completed 
+the steps were moved around. Sahil first implemented the \co{paging_init_state_foreign} 
+to setup the child process's virtual memory. Shane then took upon the code for the
+dispatcher. Allan then setup the process management files and data structures including
+the process table. He also completed the \co{vspace_spawn_setup} function. After this
+Sahil completed the loading and mapping of the ELF file. Finally, to finish the milestone
+off, Shane integrated the process management code to stop and resume processes.
 
+\subsection{Memory Reserves}
+For this milestone to pass all the test cases, namely the one that spawned 30 child processes,
+we needed to extend the \co{lib/mm.c} code, to keep a large amount of mm nodes at the start
+to spawn processes. We tried to simply bypass this method by expanding the number of slabs needed
+for the mm allocator, but this approach idd not work with the combinations we tried empirically.
 
