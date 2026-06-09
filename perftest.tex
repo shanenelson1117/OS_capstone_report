@@ -1,0 +1,34 @@
+\chapter*{Test: Min System Call Latency}{\textbf{Section Authors: Chenyi Wang}}
+ \newline 
+ \newline The goal of the Chapter is to compare AOS with xv6 open source system. We measured how long the cheapest possible system call takes on each one.
+
+\addcontentsline{toc}{chapter}{Test: System Call Latency}
+
+\section{Set up}
+We use the \co{https://github.com/k-mrm/xv6-aarch64?tab=readme-ov-file} as the baseline of performance. And we added the \co{syscall1(SYSCALL_NOP)} in the \co{hello.c} and repeated for 100000 times which is to show the cost of min syscall. And on xv6 the syscall in the loop is \co{getpid()}.
+
+\section{Results}
+
+The counter on this host runs at 62.5 MHz, so one tick is sixteen nanoseconds. Table \ref{tab:syscall-latency} shows the per-call cost on each system and the implied wall clock time.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrrr}
+\hline
+System & Syscall used & Ticks per call & Time per call \\
+\hline
+xv6 & \texttt{getpid} & 115 & 1.84 \(\mu\)s \\
+AOS & \texttt{SYSCALL\_NOP} & 408 & 6.53 \(\mu\)s \\
+\hline
+\end{tabular}
+\caption{Per-call cost of the cheapest system call on each system,
+measured on QEMU with one CPU.}
+\label{tab:syscall-latency}
+\end{table}
+
+\subsection{Analysis}
+
+A syscall on AOS is about 3.5x times more expensive than xv6. This matches what we would expect from the
+two designs. xv6 follows the usual monolithic Unix pattern: the trap goes straight to a syscall number, looks the number up in a small table, and runs the handler. 
+AOS, being a multikernel derived from Barrelfish, shares a single trap entry across several very different request types. Even when the actual handler does nothing, the kernel still has
+to decode a packed \co{union syscall_info} word.
