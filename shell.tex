@@ -138,7 +138,7 @@ an area for future work as the current implementation pushes some burden to the 
 \section{Pipes and I/O redirection}
 To enable I/O redirection we change the spawn and RPC infrastructure. Processes are spawned
 with information about where their input and output flows, then \co{aos_rpc_serial_getchar/putchar} correctly
-routes characters (TODO: line granularity not characters) to the correct endpoint. Piping I/O between processes works 
+routes characters to the correct endpoint. Piping I/O between processes works 
 in the following manner:
 \begin{enumerate}
   \label{pipe_steps}
