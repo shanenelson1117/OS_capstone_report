@@ -8,7 +8,7 @@ empirical tests, but thought it would be informative to compare our implementati
 teaching OS, xv6.
 
 \section{Comparison to xv6 on primitive operations}
-We use the \co{https://github.com/k-mrm/xv6-aarch64?tab=readme-ov-file} as a baseline performance. We feel this
+We use open-source system xv6 (\co{https://github.com/k-mrm/xv6-aarch64?tab=readme-ov-file}) as our baseline for performance. We feel this
 is a good choice because they have very distinct design philosophies, yet are both teaching operating systems.
 This section compares the latencies in cycles for three OS operations: vspace management,
 process creation, and inter-process communication. \newline
@@ -77,7 +77,7 @@ protocol overhead.
 
 AOS LMP round-trip latency ($4{,}715$ cycles) is $3.6\times$ lower than xv6 pipe
 round-trip ($16{,}987$ cycles). We see even better gains when processes are connected 
-via UMP, aos sees $3.1$ cycles per byte communicated, versus $40.6$ cycles per byte for the xv6 bulk pipe transfer---a
+via UMP, aos sees $3.1$ cycles per byte communicated, versus $40.6$ cycles per byte for the xv6 bulk pipe transfer, a
 $13\times$ advantage. \newline
 
 \noindent We hypothesize these results stem from the number of kernel boundary crossings each
@@ -88,7 +88,7 @@ requires zero boundary crossings and is simply memory fences and loads/stores.
 
 \section{Implications for our design goals}
 In the system overview section we state our main design goal as allowing as much concurrency
-as possible. The third test as well as the microbenchmarks from \hyperref[sec:performance-opt]{section m4} and \hyperref[sec:ump-concurrent]{section m6},
+as possible. The third test as well as the microbenchmarks from the \hyperref[sec:performance-opt]{m4} and \hyperref[sec:ump-concurrent]{m6} sections,
 show that our system is capable of supporting concurrent processes and threads performantly and
 specifically that our RPC and IPC systems are robust to such environments. By allowing threads to have 
 their own LMP channels and UMP servers to handle concurrent requests we extract as much

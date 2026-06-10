@@ -8,9 +8,7 @@
 
 \section{Architecture overview}
 Our M4 architecture is split cleanly between our client side request API contained in \newline \co{include/aos/aos_rpc.h} and our
-server side handlers contained in \co{usr/init/rpc_server.c}. This section will focus on only the content in these
-files relevant for LMP, there are many additional details in the source for these files, but these pertain to M6 and as such
-are not discussed here. Figure~\ref{fig:m4arch} below is a diagram illustrating the overall LMP subsystem architecture.
+server side handlers contained in \co{usr/init/rpc_server.c}. Figure~\ref{fig:m4arch} below is a diagram illustrating the overall LMP subsystem architecture.
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{images/finalm4.drawio.png}
@@ -91,7 +89,8 @@ In order to reduce the latency for large messages, we implement a shared memory 
  \end{enumerate}
 
 \section{Optimizations and performance evaluation}
-\subsection{Performance Goals and Optimizations}
+
+\subsection{Performance goals and optimizations}
 Our performance goals for our optimizations of milestone 4 were (1) reduce the latency of multithreaded RPC, 
 and (2) reduce the memory usage of our shared-memory approach.
 \subsubsection{1. Latency Reduction for Multithreaded LMP}
@@ -99,7 +98,9 @@ We anticipate multithreaded workloads that make heavy usage of the local RPC inf
 very poorly using a naive mutual-exclusion locking based approach to synchronization. For this reason we
 introduced per-thread LMP channels which allows for greater concurrency in the face of load. The implementation
 of this design is already discussed at length above, see \hyperref[sec:clientside]{Client-Side} for details. We test
-the efficacy of this optimization below, see \hyperref[sec:performance-opt]{Performance Optimization}.
+the efficacy of this optimization below, see \hyperref[sec:performance-opt]{Performance Optimization}. One area for improvement
+in our implementation would be to split the services to their own processes. This would allow for better concurrency
+across request types.
 \subsubsection{2. Memory Usage Reduction of Large Message Infrastructure}
 One of the main drawbacks of the prior optimization is the memory usage due to each channel having a frame allocated for shared memory communication. 
 This memory usage obviously increases when the number of channels increases, as it does in our prior optimization from one per process
@@ -136,38 +137,29 @@ We see a modest improvement in median Stress, insignificant difference in RTT, a
 Figure~\ref{fig:bench-naive} displays the Stress and RTT results for the un-optimized build and Figure~\ref{fig:bench-perthread} displays the same results for our 
 optimized build. RTT shows a significant increase in mean cycles, however this is swayed by a few outliers that are observed 
 consistently at the end of the benchmark. Median (P50) RTT results show a slight increase for our optimized build. I believe this
-to be due to a slight reduction in cacheability of perthread \co{struct aos_rpc} compared to per-process (although this is merely a hypothesis). 
-Interestingly, the RTT distribution for the optimized group is consistently bimodal. We observe a periodic doubling in 
-latency for single-threaded operations, and at present we cannot explain this phenomenon, this is an important area for 
-future investigation.
- \newline
- \newline
-Our multithreaded stress
+to be due to a slight reduction in cacheability of perthread \co{struct aos_rpc} compared to per-process (although this is merely a hypothesis).
+Interestingly, the RTT distribution for the optimized group is consistently bimodal. We observe a periodic doubling in
+latency for single-threaded operations, and at present we cannot explain this phenomenon, this is an important area for
+future investigation. Our multithreaded stress
 test (Figures~\ref{fig:bench-naive}~\&~\ref{fig:bench-perthread} right panel) shows that our optimized build required at mean only 78\% as many cycles as the unoptimized build, and at median only 89\% of cycles.
-Of importance is also the behavior of the tails where the unoptimized build had a significant number of latencies 2x 
+Of importance is also the behavior of the tails where the unoptimized build had a significant number of latencies 2x
 higher than the maximum optimized latency. This explains the mean-median discrepancy. We find this to be the strongest result
 for our implementation as multithreaded IPC-heavy workloads are readily imaginable.
- \newline
-  \newline
- Finally, the results for our multithreaded waiter benchmark (Figure~\ref{fig:bench-mtw}) reflect our initial expectations exactly. Our optimized build saw only
+Finally, the results for our multithreaded waiter benchmark (Figure~\ref{fig:bench-mtw}) reflect our initial expectations exactly. Our optimized build saw only
 a 26\% increase in latency with a blocked waiter, while the naive build saw a > 1000\% gain in latency, bounded by the time-to-exit of the waitee process.
 This result reflects our initial motivation for building this optimization. This may seem to be a heavily synthetic
 benchmark, but we make use of this behavior in our \hyperref[sec:background-tasks]{shell}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{images/naive_purple.png}
+    \includegraphics[width=0.9\textwidth]{images/naive_purple.png}
     \caption{Naive implementation benchmark results for a single-threaded number passing benchmark,
     labeled RTT, and a multithreaded string passing benchmark, labeled stress.}
     \label{fig:bench-naive}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{images/perthread_purple.png}
+    \includegraphics[width=0.9\textwidth]{images/perthread_purple.png}
     \caption{Per-thread implementation benchmark results for a single-threaded number passing benchmark,
     labeled RTT, and a multithreaded string passing benchmark, labeled stress. As can be seen the overhead to
-    create a perthread channel (evident in the median RTT statistic) is negligible compared to the baseline. The per-thread implementation
+    create a perthread channel is negligible compared to the baseline. The per-thread implementation
     sees significant gains in median multithreaded latency.}
     \label{fig:bench-perthread}
 \end{figure}
