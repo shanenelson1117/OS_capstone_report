@@ -149,6 +149,7 @@ UMP reply into a header and any necessary continuation messages and attempt to s
 
 
 \subsection{Concurrent UMP operations}
+\label{sec:ump-concurrent}
 The \co{pending_replies} buffer mentioned above allows our system to handle multiple
 concurrent UMP transactions. A naive implementation may elect not to have such a buffer and 
 instead only allow one outstanding UMP transaction at any point in time. This has the benefit

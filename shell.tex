@@ -170,6 +170,15 @@ in the following manner:
 \end{enumerate}
 For file redirection the process is much the same except, fields are simply set in the \co{io_config_frame} that hold
 \co{fs_handle_t} for the input and/or output file, no capability operations have to occur and are skipped with \co{NULL_CAP} checks. 
+ \newline
+ \newline
+ Known limitation: output from processes which use the \co{grading_io} library will not be redirected
+ as this circumvents the RPC system entirely. We opted to heed the warning on the grading io file and not alter its behavior.
+ Also note that init is not spawned by the shell and thus does not have io redirected. Anything that
+ init prints will go directly to the serial console.
+
+
+
 \section{Synchronizing serial input \& output}
 Serial input is synchronized with RPC. Because the UART driver is an RPC service, we trivially synchronize
 by making \co{bsp_init} the only process with a UART driver. All calls that do not come from core 0 are routed through UMP
@@ -200,6 +209,7 @@ usability.
 
 
 \subsection{Background tasks}
+\label{sec:background-tasks}
 In order to support background tasks, rather than calling dispatch in our loop, we create a new thread whose 
 entry point is \co{background_task()}. This function is a wrapper around dispatch which simply prints 
 the background task number and the command (or pid if the underlying command is \cl{run} or \cl{oncore}).
@@ -215,4 +225,11 @@ then wrote the UART driver and Shane and Sahil implemented all remaining shell f
 and debugging was done mainly adhoc (other than piping which was independently tested) via experimentation
 in the shell environment, and we recognize
 that there are many scenarios we cannot test this way. Additionally, some functionality shortcuts were taken such as
-only implementing file redirection for a subset of commands.
+only implementing file redirection for a subset of commands. 
+
+\subsubsection{Verifying correctness of redirected I/O}
+As mentioned above, any call to 
+\co{grading_printf} will not be able to be redirected by our shell. You will run into this when 
+testing and exploring spawning processes. We have a set of processes called \co{io_pipe_writer}
+and \co{io_pipe_reader} which verify correctness. Run them like so: \cl{$ oncore 1 io_pipe_writer | oncore 2 io_pipe_reader > test.txt}.
+You may need to add these (as well as the shell) binaries to your \co{menu.lst} file.

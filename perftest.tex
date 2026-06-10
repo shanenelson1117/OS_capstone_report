@@ -1,34 +1,98 @@
-\chapter*{Test: Min System Call Latency}{\textbf{Section Authors: Chenyi Wang}}
+\chapter*{Performance Evaluation}{\textbf{Section Author: Shane Nelson}}
  \newline 
- \newline The goal of the Chapter is to compare AOS with xv6 open source system. We measured how long the cheapest possible system call takes on each one.
 
-\addcontentsline{toc}{chapter}{Test: System Call Latency}
+\addcontentsline{toc}{chapter}{Performance Evaluation}
 
-\section{Set up}
-We use the \co{https://github.com/k-mrm/xv6-aarch64?tab=readme-ov-file} as the baseline of performance. And we added the \co{syscall1(SYSCALL_NOP)} in the \co{hello.c} and repeated for 100000 times which is to show the cost of min syscall. And on xv6 the syscall in the loop is \co{getpid()}.
+\noindent We keep this section relatively brief as previous sections have already included
+empirical tests, but thought it would be informative to compare our implementation to another
+teaching OS, xv6.
 
-\section{Results}
+\section{Comparison to xv6 on primitive operations}
+We use the \co{https://github.com/k-mrm/xv6-aarch64?tab=readme-ov-file} as a baseline performance. We feel this
+is a good choice because they have very distinct design philosophies, yet are both teaching operating systems.
+This section compares the latencies in cycles for three OS operations: vspace management,
+process creation, and inter-process communication. \newline
 
-The counter on this host runs at 62.5 MHz, so one tick is sixteen nanoseconds. Table \ref{tab:syscall-latency} shows the per-call cost on each system and the implied wall clock time.
+\noindent For each subsystem we run the same benchmark on both systems and measure raw counter
+ticks from the ARM generic timer (\co{cntvct\_el0}), reporting the mean and standard
+deviation across iterations. The virtual memory benchmarks map regions of increasing
+size, then measure first-touch page-fault latency and warm reaccess cost per page.
+The process creation benchmark times a full spawn-and-wait cycle using a minimal
+no-op child, isolating process lifecycle overhead from application work. The IPC
+benchmarks measure round-trip latency by sending a single byte and waiting for a
+reply, and measure bulk throughput by transferring a fixed number of bytes and
+dividing by the elapsed cycle count.
 
-\begin{table}[h]
-\centering
-\begin{tabular}{lrrr}
-\hline
-System & Syscall used & Ticks per call & Time per call \\
-\hline
-xv6 & \texttt{getpid} & 115 & 1.84 \(\mu\)s \\
-AOS & \texttt{SYSCALL\_NOP} & 408 & 6.53 \(\mu\)s \\
-\hline
-\end{tabular}
-\caption{Per-call cost of the cheapest system call on each system,
-measured on QEMU with one CPU.}
-\label{tab:syscall-latency}
-\end{table}
+\subsection{VSpace Management}
 
-\subsection{Analysis}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{fig/bench_vm.png}
+    \caption{Results of virtual memory microbenchmarks.}
+    \label{fig:vmbench}
+\end{figure}
 
-A syscall on AOS is about 3.5x times more expensive than xv6. This matches what we would expect from the
-two designs. xv6 follows the usual monolithic Unix pattern: the trap goes straight to a syscall number, looks the number up in a small table, and runs the handler. 
-AOS, being a multikernel derived from Barrelfish, shares a single trap entry across several very different request types. Even when the actual handler does nothing, the kernel still has
-to decode a packed \co{union syscall_info} word.
+\noindent The most distinct result is the allocation cost. AOS remains
+approximately constant costing $2{,}600$--$3{,}300$ cycles regardless of how many pages
+are requested, while xv6 scales linearly from $1{,}700$ cycles for one page to
+$271{,}775$ cycles for 256 pages. xv6 costs nearly 160x more at this large size.
+Page-fault handling on AOS stabilises at roughly 19 cycles per page across all
+region sizes. On xv6 the per-page fault cost collapses to near zero for regions
+larger than four pages. We think this is due to xv6 eagerly mapping pages. \newline 
+
+\noindent The constant allocation cost in AOS follows directly from the design of
+\co{paging_map_frame}: it installs page-table entries covering the entire requested
+virtual range in a single kernel operation, independent of the number of pages
+involved. xv6 instead loops over every page calling \co{uvmalloc} which accounts for
+its linear scaling. The page fault handling result is due to our system using demand
+paging where xv6 use eager paging.
+
+
+\subsection{Process Creation}
+We test the latency of creating a process by 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{fig/bench_proc.png}
+    \caption{Results of process creation microbenchmark.}
+    \label{fig:pcbench}
+\end{figure}
+
+\noindent The results show that process creation is 12x slower on barrelfish compared to xv6.
+We suspect that this is due to RPC and capability overhead as well as ELF loading. xv6 \co{fork} simply
+has to copy the kernel proc struct and shallow clone the page tables. The \co{exec} step adds ELF loading, which is the
+only phase comparable to AOS's work, yet the full \co{fork}+\co{exec}+\co{wait} cycle
+still finishes in $134{,}831$ cycles which is roughly the time AOS spends just on the RPC
+protocol overhead.
+
+
+\subsection{Inter-process Communication}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{fig/bench_ipc.png}
+    \caption{Results of process creation microbenchmark.}
+    \label{fig:ipcbench}
+\end{figure}
+
+AOS LMP round-trip latency ($4{,}715$ cycles) is $3.6\times$ lower than xv6 pipe
+round-trip ($16{,}987$ cycles). We see even better gains when processes are connected 
+via UMP, aos sees $3.1$ cycles per byte communicated, versus $40.6$ cycles per byte for the xv6 bulk pipe transfer---a
+$13\times$ advantage. \newline
+
+\noindent We hypothesize these results stem from the number of kernel boundary crossings each
+mechanism requires. The xv6 pipe round-trip involves two full context switches through
+the kernel scheduler per message, whereas AOS LMP delivers synchronously to init on the
+same core, bypassing the general scheduler entirely. UMP performs even better because it
+requires zero boundary crossings and is simply memory fences and loads/stores.
+
+\section{Implications for our design goals}
+In the system overview section we state our main design goal as allowing as much concurrency
+as possible. The third test as well as the microbenchmarks from \hyperref[sec:performance-opt]{section m4} and \hyperref[sec:ump-concurrent]{section m6},
+show that our system is capable of supporting concurrent processes and threads performantly and
+specifically that our RPC and IPC systems are robust to such environments. By allowing threads to have 
+their own LMP channels and UMP servers to handle concurrent requests we extract as much
+concurrency as feasible given the synchrony and lack of parallelism in these single core benchmarks. One especially disappointing 
+result is the high cost to spawn a process, we think that this is inherent to the system, but wish to have
+implemented spawning more performantly. Overall we feel as though the high pagefault and spawn latencies
+are an acceptable tradeoff for increased concurrency and lazy commitment of resources.

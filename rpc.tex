@@ -151,8 +151,8 @@ for our implementation as multithreaded IPC-heavy workloads are readily imaginab
   \newline
  Finally, the results for our multithreaded waiter benchmark (Figure~\ref{fig:bench-mtw}) reflect our initial expectations exactly. Our optimized build saw only
 a 26\% increase in latency with a blocked waiter, while the naive build saw a > 1000\% gain in latency, bounded by the time-to-exit of the waitee process.
-This result reflects our initial motivation for building this optimization. It may seem heavily cherry-picked, but you could 
-imagine an application such as a shell having such behavior.
+This result reflects our initial motivation for building this optimization. This may seem to be a heavily synthetic
+benchmark, but we make use of this behavior in our \hyperref[sec:background-tasks]{shell}.
 
 \begin{figure}[H]
     \centering
@@ -199,4 +199,7 @@ involved reworking and hardening the implementation in phase 1, as well as chang
  The final phase began when collecting data for this report, where Shane (with the help of AI tooling) reverted
  to an unoptimized version of the code. Shane then implemented 3 benchmarks, collected results, and wrote the M4 section
  of the report.
+ \newline
+  \newline
+  Testing note: Test R02 times out rather than completeling. From discussions on ed this seems to be common behavior among all groups.
 \newpage
