@@ -127,19 +127,19 @@ invoking \co{coreboot_boot_core} on the same core ID.
 
 \section{Development Process}
 
-This milestone began with implementing the main functionality in \co{coreboot_boot_core} in
+This milestone began with Allan implementing the main functionality in \co{coreboot_boot_core} in
 \co{usr/init/coreboot.c}, where we allocated all the necessary data structures and set up the
-shared URPC frame. In this part, we also enabled booting all cores on the Toradex board by
+shared URPC frame. In this part, Sahil also enabled booting all cores on the Toradex board by
 modifying \co{usr/init/main.c}.
 
 \medskip\noindent
-We then implemented memory allocation on remote cores, which involved allocating a large chunk of
+Sahil then implemented memory allocation on remote cores, which involved allocating a large chunk of
 memory through \co{ram_alloc} and passing it through the URPC frame. We also needed a way to
 initialize the allocator from a forged capability, which required us to implement
 \co{initialize_ram_alloc_from_cap} in \co{usr/init/mem_alloc.c}.
 
 \medskip\noindent
-Finally, we implemented all the core lifecycle functions and wrote sample test cases to demonstrate
+Finally, Sahil implemented all the core lifecycle functions and wrote sample test cases to demonstrate
 the functionality.
 \\
  \newline
