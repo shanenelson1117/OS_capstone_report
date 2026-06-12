@@ -9,9 +9,7 @@ frame treated as two circular ring buffers. Processes always communicate with
 their local init using LMP. When a process issues an \co{aos_rpc} call that targets a service on a remote
 core, local init intercepts the LMP message and forwards it over UMP to the
 appropriate remote init, hence all messages require an init interception. This is intended as a simplification, but also is logical because all services in the 
-API are served by init. We extend this original API to enable arbitrary process-to-process piping
-as required by a shell. The Archicture Overview section only discusses the infrastructure needed to implement the original API, see \hyperref[sec:shell_extension]{Extension for Shell} for discussion on the
- extension. Figure~\ref{fig:m6over} below illustrates the base UMP subsystem.
+API are served by init. Figure~\ref{fig:m6over} below illustrates the base UMP subsystem.
 
 
  \begin{figure}[H]
