@@ -38,4 +38,122 @@
 \@writefile{toc}{\contentsline {subsection}{Virtual address space tracking}{10}{subsection*.32}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{Map and unmap}{11}{subsection*.33}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{Lazy Heap Allocation}{11}{subsection*.34}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{Page Fault Handler}{11}{subs
+\@writefile{toc}{\contentsline {subsection}{Page Fault Handler}{11}{subsection*.35}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Slab Allocators}{11}{subsection*.36}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Slot Allocator Refill}{12}{subsection*.37}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Limitations and follow-ups}{12}{subsection*.38}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Evaluation}{12}{section*.39}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Base costs}{12}{subsection*.40}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Comparison to 1991 systems}{12}{subsection*.41}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Per operation cost of the four primitives. Log scale on the y axis; the four bars span roughly six orders of magnitude.}}{13}{figure.0.2}\protected@file@percent }
+\newlabel{fig:m2bench}{{2}{13}{Per operation cost of the four primitives. Log scale on the y axis; the four bars span roughly six orders of magnitude}{figure.0.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Page fault round trip on our system against the seven 1991 systems tabulated in Appel and Li's paper.}}{13}{figure.0.3}\protected@file@percent }
+\newlabel{fig:m2_appel_li}{{3}{13}{Page fault round trip on our system against the seven 1991 systems tabulated in Appel and Li's paper}{figure.0.3}{}}
+\@writefile{toc}{\contentsline {subsection}{Allocation Strategies Across ``Touch Ratios''}{13}{subsection*.42}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Lazy versus eager as the touched fraction of the reservation grows. Reservation is 1000 pages throughout.}}{14}{figure.0.4}\protected@file@percent }
+\newlabel{fig:m2_lve_sweep}{{4}{14}{Lazy versus eager as the touched fraction of the reservation grows. Reservation is 1000 pages throughout}{figure.0.4}{}}
+\@writefile{toc}{\contentsline {subsection}{Hybrid Strategy Under Random Access}{14}{subsection*.43}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Hybrid latency as the eager region grows from zero to the full reservation. Random touch pattern, 100 touches.}}{15}{figure.0.5}\protected@file@percent }
+\newlabel{fig:m2_hybrid}{{5}{15}{Hybrid latency as the eager region grows from zero to the full reservation. Random touch pattern, 100 touches}{figure.0.5}{}}
+\@writefile{toc}{\contentsline {subsection}{Frames Versus Time Trade-off}{15}{subsection*.44}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Hybrid frames and latency for small eager regions, with a fixed 100 touch random workload over a 1000 page reservation.}}{16}{figure.0.6}\protected@file@percent }
+\newlabel{fig:m2_hybrid_mix}{{6}{16}{Hybrid frames and latency for small eager regions, with a fixed 100 touch random workload over a 1000 page reservation}{figure.0.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Eager pays ten times the memory for near zero touch latency; lazy and hybrid land in the same lower band of memory but pay hundreds of milliseconds.}}{16}{figure.0.7}\protected@file@percent }
+\newlabel{fig:m2_mem}{{7}{16}{Eager pays ten times the memory for near zero touch latency; lazy and hybrid land in the same lower band of memory but pay hundreds of milliseconds}{figure.0.7}{}}
+\@writefile{toc}{\contentsline {section}{Development Process}{16}{section*.45}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{M3: Processes, Threads, and Dispatch}{17}{chapter*.46}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Architecture Overview}{17}{section*.47}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Process Spawning}{17}{section*.48}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Virtual Address Space Setup}{17}{subsection*.49}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{ELF Segment Mapping}{17}{subsection*.50}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Dispatcher Setup}{18}{subsection*.51}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Process Management}{18}{section*.52}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Development Process}{18}{section*.53}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Memory Reserves}{18}{subsection*.54}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{M4: Core-Local Message Passing (LMP)}{19}{chapter*.55}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Architecture overview}{19}{section*.56}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Overall LMP subsystem architecture.}}{19}{figure.0.8}\protected@file@percent }
+\newlabel{fig:m4arch}{{8}{19}{Overall LMP subsystem architecture}{figure.0.8}{}}
+\@writefile{toc}{\contentsline {subsection}{Client-side}{19}{subsection*.57}\protected@file@percent }
+\newlabel{sec:clientside}{{}{19}{Client-side}{subsection*.57}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Thread-Local state}{20}{subsubsection*.58}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Channel initialization}{20}{subsubsection*.59}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Synchronous send and receive}{20}{subsubsection*.60}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Server-side}{20}{subsection*.61}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Handshake protocol}{20}{subsubsection*.62}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{General purpose serving}{20}{subsubsection*.63}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Special case: {\textcolor {codeblue}{\textbf  {\texttt  {aos_rpc_proc_wait()}}}}}{21}{subsubsection*.64}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Shared memory for large messages}{21}{subsection*.65}\protected@file@percent }
+\newlabel{sec:shared_mem}{{}{21}{Shared memory for large messages}{subsection*.65}{}}
+\@writefile{toc}{\contentsline {section}{Optimizations and performance evaluation}{21}{section*.66}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Performance goals and optimizations}{21}{subsection*.67}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{1. Latency Reduction for Multithreaded LMP}{21}{subsubsection*.68}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{2. Memory Usage Reduction of Large Message Infrastructure}{22}{subsubsection*.69}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Performance evaluation}{22}{subsection*.70}\protected@file@percent }
+\newlabel{sec:performance-opt}{{}{22}{Performance evaluation}{subsection*.70}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Microbenchmarks}{22}{subsubsection*.71}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Results}{22}{subsubsection*.72}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Naive implementation benchmark results for a single-threaded number passing benchmark, labeled RTT, and a multithreaded string passing benchmark, labeled stress.}}{23}{figure.0.9}\protected@file@percent }
+\newlabel{fig:bench-naive}{{9}{23}{Naive implementation benchmark results for a single-threaded number passing benchmark, labeled RTT, and a multithreaded string passing benchmark, labeled stress}{figure.0.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Per-thread implementation benchmark results for a single-threaded number passing benchmark, labeled RTT, and a multithreaded string passing benchmark, labeled stress. As can be seen the overhead to create a perthread channel is negligible compared to the baseline. The per-thread implementation sees significant gains in median multithreaded latency.}}{23}{figure.0.10}\protected@file@percent }
+\newlabel{fig:bench-perthread}{{10}{23}{Per-thread implementation benchmark results for a single-threaded number passing benchmark, labeled RTT, and a multithreaded string passing benchmark, labeled stress. As can be seen the overhead to create a perthread channel is negligible compared to the baseline. The per-thread implementation sees significant gains in median multithreaded latency}{figure.0.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Performance drop-off from running a multithreaded workload (MTW) without a thread waiting on a process to finish, to running one with a thread waiting. Per process lmp channels perform > 1000\% worse while a thread is waiting, whereas per-thread channels see only a modest 26\% cycle gain.}}{24}{figure.0.11}\protected@file@percent }
+\newlabel{fig:bench-mtw}{{11}{24}{Performance drop-off from running a multithreaded workload (MTW) without a thread waiting on a process to finish, to running one with a thread waiting. Per process lmp channels perform > 1000\% worse while a thread is waiting, whereas per-thread channels see only a modest 26\% cycle gain}{figure.0.11}{}}
+\@writefile{toc}{\contentsline {section}{Development process}{24}{section*.73}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{M5: Multicore}{25}{chapter*.74}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Architecture Overview}{25}{section*.75}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Multicore Architecture}}{25}{figure.0.12}\protected@file@percent }
+\newlabel{fig:m5arch}{{12}{25}{Multicore Architecture}{figure.0.12}{}}
+\@writefile{toc}{\contentsline {subsection}{Initial URPC Frame}{25}{subsection*.76}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Booting Another Core}{26}{subsection*.77}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Multicore Memory Management}{26}{subsection*.78}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Suspend, Resume, Shutdown, and Reboot}{27}{subsection*.79}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Development Process}{27}{section*.80}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{M6: User-Level Message Passing (UMP)}{28}{chapter*.81}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Architecture overview}{28}{section*.82}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Abstracted view of the RPC system.}}{28}{figure.0.13}\protected@file@percent }
+\newlabel{fig:m6over}{{13}{28}{Abstracted view of the RPC system}{figure.0.13}{}}
+\@writefile{toc}{\contentsline {subsection}{Initializing UMP channels}{28}{subsection*.83}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Memory layout of UMP channel}{29}{subsection*.84}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Handling incoming messages}{29}{subsection*.85}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Requestor}{30}{subsection*.86}\protected@file@percent }
+\newlabel{sec:requestor}{{}{30}{Requestor}{subsection*.86}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Facilitating global operations}{30}{subsubsection*.87}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Receiver}{30}{subsection*.88}\protected@file@percent }
+\newlabel{sec:receiver}{{}{30}{Receiver}{subsection*.88}{}}
+\@writefile{toc}{\contentsline {subsection}{Concurrent UMP operations}{31}{subsection*.89}\protected@file@percent }
+\newlabel{sec:ump-concurrent}{{}{31}{Concurrent UMP operations}{subsection*.89}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Results show linear speedup in the number of slots in {\textcolor {codeblue}{\textbf  {\texttt  {pending_replies}}}}, until there are enough slots for each thread at which point there are no additional returns.}}{31}{figure.0.14}\protected@file@percent }
+\newlabel{fig:16threads}{{14}{31}{Results show linear speedup in the number of slots in \co {pending_replies}, until there are enough slots for each thread at which point there are no additional returns}{figure.0.14}{}}
+\@writefile{toc}{\contentsline {section}{Development process}{31}{section*.90}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{M7: Shell}{33}{chapter*.91}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Keyboard input: userspace UART driver}{33}{section*.92}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Device drivers}{33}{subsection*.93}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Interrupt Chain Setup}{33}{subsection*.94}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Ring Buffer and Deferred RPC Replies}{34}{subsection*.95}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{RamFS file system support}{34}{section*.96}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Pipes and I/O redirection}{35}{section*.97}\protected@file@percent }
+\newlabel{pipe_steps}{{}{35}{Pipes and I/O redirection}{section*.97}{}}
+\@writefile{toc}{\contentsline {section}{Synchronizing serial input \& output}{36}{section*.98}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Command processing}{36}{section*.99}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Environment variables}{36}{subsection*.100}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{Background tasks}{36}{subsection*.101}\protected@file@percent }
+\newlabel{sec:background-tasks}{{}{36}{Background tasks}{subsection*.101}{}}
+\@writefile{toc}{\contentsline {section}{Development process}{37}{section*.102}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Verifying correctness of redirected I/O}{37}{subsubsection*.103}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{Performance Evaluation}{38}{chapter*.104}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Comparison to xv6 on primitive operations}{38}{section*.105}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{VSpace Management}{38}{subsection*.106}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces Results of virtual memory microbenchmarks.}}{38}{figure.0.15}\protected@file@percent }
+\newlabel{fig:vmbench}{{15}{38}{Results of virtual memory microbenchmarks}{figure.0.15}{}}
+\@writefile{toc}{\contentsline {subsection}{Process Creation}{39}{subsection*.107}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces Results of process creation microbenchmark.}}{39}{figure.0.16}\protected@file@percent }
+\newlabel{fig:pcbench}{{16}{39}{Results of process creation microbenchmark}{figure.0.16}{}}
+\@writefile{toc}{\contentsline {subsection}{Inter-process Communication}{39}{subsection*.108}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces Results of process creation microbenchmark.}}{39}{figure.0.17}\protected@file@percent }
+\newlabel{fig:ipcbench}{{17}{39}{Results of process creation microbenchmark}{figure.0.17}{}}
+\@writefile{toc}{\contentsline {section}{Implications for our design goals}{40}{section*.109}\protected@file@percent }
+\newlabel{appA}{{}{41}{Appendix A: Shell Commands}{chapter*.110}{}}
+\@writefile{toc}{\contentsline {chapter}{Appendix A: Shell Commands}{41}{chapter*.110}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{Appendix B: AI Usage Declaration}{43}{chapter*.111}\protected@file@percent }
+\gdef \@abspage@last{44}
