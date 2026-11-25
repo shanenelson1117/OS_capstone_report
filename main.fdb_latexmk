@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1781237501.52676 "/Users/shanenelson/Classes/481a/CSE481A_labreport/main.tex" "main.pdf" "main" 1781237503.99774 0
-  "/Users/shanenelson/Classes/481a/CSE481A_labreport/main.tex" 1781236796.43892 1804 40d25551ecd8e8e7d9dfdd4aea6a0615 ""
+["pdflatex"] 1795566238.20901 "/Users/shanenelson/Classes/481a/CSE481A_labreport/main.tex" "main.pdf" "main" 1795566239.93038 0
+  "/Users/shanenelson/Classes/481a/CSE481A_labreport/main.tex" 1795566234.44974 1805 f57c4f6168a10ac2cec2dff00ef50422 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -144,10 +144,10 @@
   "images/osarch.drawio.png" 1780868686.27217 115782 7007c22e264c3255d843429a500b865c ""
   "images/perthread_purple.png" 1780372909.69008 46949 f9802af8980f7c34ef7af668500cad93 ""
   "images/waiting.png" 1780372899.82464 20470 0616fe6ab437527213908c5aa07cde22 ""
-  "main.aux" 1781237503.86046 19969 6bc73f0a034cde8a28324f04e5f3f917 "pdflatex"
-  "main.out" 1781237503.86277 17169 8e4a705026d0ff7b30f213ede36551e7 "pdflatex"
-  "main.tex" 1781236796.43892 1804 40d25551ecd8e8e7d9dfdd4aea6a0615 ""
-  "main.toc" 1781237503.86304 7909 d9ee0bec283a8ebd639cd83bb29eb189 "pdflatex"
+  "main.aux" 1795566239.83668 19969 6bc73f0a034cde8a28324f04e5f3f917 "pdflatex"
+  "main.out" 1795566239.83821 17169 8e4a705026d0ff7b30f213ede36551e7 "pdflatex"
+  "main.tex" 1795566234.44974 1805 f57c4f6168a10ac2cec2dff00ef50422 ""
+  "main.toc" 1795566239.83842 7909 d9ee0bec283a8ebd639cd83bb29eb189 "pdflatex"
   "memory-allocation.tex" 1781001553.132 4844 16e5484b6cc61b68ac15003c152c3078 ""
   "multicore.tex" 1781236789.10831 7568 571cb5ea41227217a54872ab34b1bed0 ""
   "perftest.tex" 1781111433.36487 5519 cd9736fd662699aaa4b9bded4cc21bb5 ""
